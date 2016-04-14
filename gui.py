@@ -8,8 +8,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from matplotlib.figure import Figure
 import matplotlib.animation as animation
 from matplotlib import style
-import makeRsaKeys
-import rsaCipher
+from RSA import makeRsaKeys, rsaCipher
 
 
 import tkinter as tk
