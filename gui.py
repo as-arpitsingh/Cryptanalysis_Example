@@ -15,7 +15,8 @@ import rsaCipher
 import tkinter as tk
 from tkinter import ttk
 
-
+INTRO_TEXT='Replace with the Intro Text'
+PROJECT_NAME='Cryptanalysis'
 LARGE_FONT= ("Verdana", 12)
 style.use("ggplot")
 
@@ -48,7 +49,7 @@ class Cryptanalysis(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         #tk.Tk.iconbitmap(self, default="clienticon.ico")
-        tk.Tk.wm_title(self, "Sea of BTC client")
+        tk.Tk.wm_title(self, PROJECT_NAME)
         
         
         container = tk.Frame(self)
@@ -58,7 +59,7 @@ class Cryptanalysis(tk.Tk):
 
         self.frames = {}
 
-        for F in (StartPage, PageOne, PageTwo, PageThree):
+        for F in (PageHome, PageRSA, PageDES, PagePerformanceAnalysis):
 
             frame = F(container, self)
 
@@ -66,7 +67,7 @@ class Cryptanalysis(tk.Tk):
 
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(StartPage)
+        self.show_frame(PageHome)
 
     def show_frame(self, cont):
 
@@ -74,70 +75,78 @@ class Cryptanalysis(tk.Tk):
         frame.tkraise()
 
         
-class StartPage(tk.Frame):
+class PageHome(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
-        label1 = tk.Label(self, text="CS685\nComputer Security\nFinal Project", font=LARGE_FONT)
+        label1 = tk.Label(self, text=INTRO_TEXT, font=LARGE_FONT)
         label1.pack(pady=10,padx=10)
 
-        label2 = tk.Label(self, text="RSA\nSymmetric Key Based\nEncryption / Decryption", font=("Helvetica", 16))
+        label2 = tk.Label(self, text="HOME", font=("Helvetica", 16))
         label2.pack(pady=50,padx=30)
 
-        button = ttk.Button(self, text="Make Keys for RSA",
-                            command=lambda: runRSAKeyFunction())
+        button = ttk.Button(self, text="RSA",
+                            command=lambda: controller.show_frame(PageRSA))
         button.pack()
 
-        button2 = ttk.Button(self, text="Visit Page 2",
-                            command=lambda: controller.show_frame(PageTwo))
+        button2 = ttk.Button(self, text="DES",
+                            command=lambda: controller.show_frame(PageDES))
         button2.pack()
 
-        button3 = ttk.Button(self, text="Graph Page",
-                            command=lambda: controller.show_frame(PageThree))
+        button3 = ttk.Button(self, text="Performance Analysis",
+                            command=lambda: controller.show_frame(PagePerformanceAnalysis))
         button3.pack()
 
 
-class PageOne(tk.Frame):
+class PageRSA(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Page One!!!", font=LARGE_FONT)
+        label = tk.Label(self, text="RSA", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
 
         button1 = ttk.Button(self, text="Back to Home",
-                            command=lambda: controller.show_frame(StartPage))
+                            command=lambda: controller.show_frame(PageHome))
         button1.pack()
 
-        button2 = ttk.Button(self, text="Page Two",
-                            command=lambda: controller.show_frame(PageTwo))
+        button2 = ttk.Button(self, text="DES",
+                            command=lambda: controller.show_frame(PageDES))
         button2.pack()
+          
+        button3 = ttk.Button(self, text="Performance Analysis",
+                             command=lambda: controller.show_frame(PagePerformanceAnalysis))
+        button3.pack()
 
 
-class PageTwo(tk.Frame):
+class PageDES(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Page Two!!!", font=LARGE_FONT)
+        label = tk.Label(self, text="DES", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
 
         button1 = ttk.Button(self, text="Back to Home",
-                            command=lambda: controller.show_frame(StartPage))
+                            command=lambda: controller.show_frame(PageHome))
         button1.pack()
 
-        button2 = ttk.Button(self, text="Page One",
-                            command=lambda: controller.show_frame(PageOne))
+        button2 = ttk.Button(self, text="RSA",
+                            command=lambda: controller.show_frame(PageRSA))
         button2.pack()
+          
+        button3 = ttk.Button(self, text="Performance Analysis",
+                               command=lambda: controller.show_frame(PagePerformanceAnalysis))
+        button3.pack()
 
 
-class PageThree(tk.Frame):
+class PagePerformanceAnalysis(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Graph Page!", font=LARGE_FONT)
+        label = tk.Label(self, text="Performance Analysis", font=LARGE_FONT)
         label.pack(pady=10,padx=10)
 
         button1 = ttk.Button(self, text="Back to Home",
-                            command=lambda: controller.show_frame(StartPage))
+                            command=lambda: controller.show_frame(PageHome))
         button1.pack()
 
         canvas = FigureCanvasTkAgg(f, self)
