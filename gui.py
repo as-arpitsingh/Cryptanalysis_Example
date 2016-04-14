@@ -116,8 +116,11 @@ class PageHome(tk.Frame):
         button2 = ttk.Button(self, text="DES Home", command=lambda: controller.show_frame(PageDESHome))
         button2.pack()
 
-        button9 = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
-        button9.pack()
+        paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
+        paButton.pack()
+
+        quitButton = ttk.Button(self, text="Quit", command=controller.destroy)
+        quitButton.pack()
 
 ################################################################################
 #---------------   RSA Page
@@ -140,8 +143,8 @@ class PageRSAHome(tk.Frame):
         button3.pack()
     
 
-        button9 = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
-        button9.pack()
+        paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
+        paButton.pack()
 
 
 
@@ -158,8 +161,8 @@ class PageRSA(tk.Frame):
         button2 = ttk.Button(self, text="RSA Home", command=lambda: controller.show_frame(PageRSAHome))
         button2.pack()
 
-        button9 = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
-        button9.pack()
+        paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
+        paButton.pack()
 
 
 class PageRSALib(tk.Frame):
@@ -175,8 +178,8 @@ class PageRSALib(tk.Frame):
         button2 = ttk.Button(self, text="RSA Home", command=lambda: controller.show_frame(PageRSAHome))
         button2.pack()
 
-        button9 = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
-        button9.pack()
+        paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
+        paButton.pack()
 
 
 
@@ -199,8 +202,8 @@ class PageDESHome(tk.Frame):
         button3 = ttk.Button(self, text="DES Lib.", command=lambda: controller.show_frame(PageDESLib))
         button3.pack()
         
-        button9 = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
-        button9.pack()
+        paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
+        paButton.pack()
 
 
 class PageDES(tk.Frame):
@@ -216,8 +219,8 @@ class PageDES(tk.Frame):
         button2 = ttk.Button(self, text="DES Home", command=lambda: controller.show_frame(PageDESHome))
         button2.pack()
 
-        button9 = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
-        button9.pack()
+        paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
+        paButton.pack()
 
 
 class PageDESLib(tk.Frame):
@@ -233,8 +236,8 @@ class PageDESLib(tk.Frame):
         button2 = ttk.Button(self, text="DES Home", command=lambda: controller.show_frame(PageDESHome))
         button2.pack()
 
-        button9 = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
-        button9.pack()
+        paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
+        paButton.pack()
 
 
 
@@ -263,9 +266,17 @@ class PagePerformanceAnalysis(tk.Frame):
 
 
 ################################################################################
-#---------------   Calling main loop
+#---------------   Main
 ################################################################################
 
-app = Cryptanalysis()
-ani = animation.FuncAnimation(f, animate, interval=1000)
-app.mainloop()
+
+def main():
+    app = Cryptanalysis()
+    ani = animation.FuncAnimation(f, animate, interval=1000)
+    app.mainloop()
+
+if __name__ == '__main__':
+    main()
+
+
+
