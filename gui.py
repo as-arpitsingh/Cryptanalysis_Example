@@ -12,19 +12,29 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from matplotlib.figure import Figure
 import matplotlib.animation as animation
 from matplotlib import style
-from RSA import makeRsaKeys, rsaCipher
 import tkinter as tk
 from tkinter import ttk
+import urllib
+import json
+import pandas as pd
+from matplotlib import pyplot as plt
+import numpy as np
+import makeRsaKeys, rsaCipher
 
 ################################################################################
 #---------------   initializing global variables
 ################################################################################
 
-INTRO_TEXT='Replace with the Intro Text'
-PROJECT_NAME='Cryptanalysis'
-LARGE_FONT= ("Verdana", 12)
+INTRO_TEXT = 'CS685 Computer Security'
+PROJECT_NAME = 'Cryptanalysis'
+LARGE_FONT = ("Helvetica", 16)
+MID_FONT= ("Verdana", 12)
+NORM_FONT= ("Verdana", 10)
+SMALL_FONT= ("Verdana", 8)
+
 style.use("ggplot")
-f = Figure(figsize=(12,6), dpi=100)
+#f = Figure(figsize=(12,6), dpi=100)
+f = Figure()
 a = f.add_subplot(111)
 
 ################################################################################
@@ -45,19 +55,6 @@ def animate(i):
 
     a.clear()
     a.plot(xList, yList)
-
-#---------------   Function to call makeRsaKeys.py main function
-def runRSAKeyFunction():
-    makeRsaKeys.main()
-
-#---------------   Function to call rsaCipher.py Encryption function
-def runRSAEncryptionFunction():
-    pass
-
-#---------------   Function to call rsaCipher.py Decryption function
-def runRSADecryptionFunction():
-    pass
-
 
 
 ################################################################################
@@ -104,12 +101,12 @@ class PageHome(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
-        label1 = tk.Label(self, text=INTRO_TEXT, font=LARGE_FONT)
-        label1.pack(pady=10,padx=10)
-
-        label2 = tk.Label(self, text="HOME", font=("Helvetica", 16))
-        label2.pack(pady=50,padx=30)
-
+        label1 = tk.Label(self, text=INTRO_TEXT, font=MID_FONT)
+        label1.pack(pady=10,padx=10, side='top')
+        
+        label2 = tk.Label(self, text="HOME", font=MID_FONT)
+        label2.pack(pady=10,padx=10, side='top')
+        
         button1 = ttk.Button(self, text="RSA Home", command=lambda: controller.show_frame(PageRSAHome))
         button1.pack()
 
@@ -119,7 +116,7 @@ class PageHome(tk.Frame):
         paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
         paButton.pack()
 
-        quitButton = ttk.Button(self, text="Quit", command=controller.destroy)
+        quitButton = ttk.Button(self, text="Quit", command=quit)
         quitButton.pack()
 
 ################################################################################
@@ -149,7 +146,19 @@ class PageRSAHome(tk.Frame):
 
 
 class PageRSA(tk.Frame):
-  
+
+    #---------------   Function to call makeRsaKeys.py main function
+    def runRSAKeyFunction():
+        makeRsaKeys.main()
+
+    #---------------   Function to call rsaCipher.py Encryption function
+    def runRSAEncryptionFunction():
+        pass
+
+    #---------------   Function to call rsaCipher.py Decryption function
+    def runRSADecryptionFunction():
+        pass
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="RSA", font=LARGE_FONT)
@@ -272,6 +281,7 @@ class PagePerformanceAnalysis(tk.Frame):
 
 def main():
     app = Cryptanalysis()
+    app.geometry("1280x720")
     ani = animation.FuncAnimation(f, animate, interval=1000)
     app.mainloop()
 
