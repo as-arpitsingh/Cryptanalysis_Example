@@ -2,7 +2,8 @@
 # http://inventwithpython.com/hacking (BSD Licensed)
 
 import random, sys, os
-from . import rabinMiller, cryptomath
+
+from dependencies import rabinMiller, cryptomath
 
 
 def main():

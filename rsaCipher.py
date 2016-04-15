@@ -14,10 +14,9 @@ def main():
     # from a file.
     filename = 'encrypted_file.txt' # the file to write to/read from
     mode = 'decrypt' # set to 'encrypt' or 'decrypt'
-    startTime = time.time()
 
     if mode == 'encrypt':
-        startTime = time.time()
+        startEncryptTime = time.time()
         plainTextFileName = input("Enter the Plain Text file name:\n")
         plainTextFile = open(plainTextFileName, 'r')
         message = plainTextFile.read()
@@ -25,19 +24,19 @@ def main():
         pubKeyFilename = 'RSA_pubkey.txt'
         print('Encrypting and writing to %s...' % (filename))
         encryptedText = encryptAndWriteToFile(filename, pubKeyFilename, message)
-
+        print ('Total time:', time.time()-startEncryptTime)
+        print ('Input Size:', len(message))
         print('Encrypted text:')
         print(encryptedText)
 
     elif mode == 'decrypt':
+        startDecryptTime = time.time()
         privKeyFilename = 'RSA_privkey.txt'
         print('Reading from %s and decrypting...' % (filename))
         decryptedText = readFromFileAndDecrypt(filename, privKeyFilename)
-
+        print ('Total time:', time.time()-startDecryptTime)
         print('Decrypted text:')
         print(decryptedText)
-
-    print ('Total time:', time.time()-startTime)
 
 def getBlocksFromText(message, blockSize=DEFAULT_BLOCK_SIZE):
     # Converts a string message to a list of block integers. Each integer
