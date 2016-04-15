@@ -6,7 +6,7 @@
 #---------------   importing dependencies
 ################################################################################
 
-import matplotlib
+import matplotlib, os, re, datetime
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
@@ -20,6 +20,8 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import numpy as np
 import makeRsaKeys, rsaCipher
+#from tkFileDialog import askopenfilename
+#from PIL import Image
 
 ################################################################################
 #---------------   initializing global variables
@@ -161,17 +163,25 @@ class PageRSA(tk.Frame):
 
 class PageRSAFunction(tk.Frame):
 
+
     #---------------   Function to call makeRsaKeys.py main function
-    def runRSAKeyFunction():
-        makeRsaKeys.main()
+    def runRSAKeyFunction(self):
+        pathRSAPubKey = os.getcwd()+'/'+'RSA_pubkey.txt'
+        pathRSAPrivKey = os.getcwd()+'/'+'RSA_privkey.txt'
+        if os.path.isfile(pathRSAPubKey) or os.path.isfile(pathRSAPrivKey):
+            print ('Keys already exist!')
+        else:
+            makeRsaKeys.main()
 
     #---------------   Function to call rsaCipher.py Encryption function
-    def runRSAEncryptionFunction():
+    def runRSAEncryptionFunction(self):
         pass
-
+    
     #---------------   Function to call rsaCipher.py Decryption function
-    def runRSADecryptionFunction():
-        pass
+    def runRSADecryptionFunction(self):
+        print ('yoyoyo!')
+    
+
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -190,6 +200,19 @@ class PageRSAFunction(tk.Frame):
         paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
         paButton.pack(side=PACK_SIDE)
         paButton.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+        button4 = ttk.Button(self, text="Make RSA Keys", command=self.runRSAKeyFunction)
+        button4.pack(side=PACK_SIDE)
+        button4.place(relx=2*PLACE_HORIZONTAL_SPACING, rely=3*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        
+        button5 = ttk.Button(self, text="RSA Function Encryption", command=self.runRSAEncryptionFunction)
+        button5.pack(side=PACK_SIDE)
+        button5.place(relx=4*PLACE_HORIZONTAL_SPACING, rely=3*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        
+        button6 = ttk.Button(self, text="RSA Function Decryption", command=self.runRSADecryptionFunction)
+        button6.pack(side=PACK_SIDE)
+        button6.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=3*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
 
 
 class PageRSALib(tk.Frame):
