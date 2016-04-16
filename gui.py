@@ -158,6 +158,9 @@ class PageRSA(tk.Frame):
 
 
 class PageRSAFunction(tk.Frame):
+    PLAIN_TEXT_FILE = 'plainText.txt'
+    ENCRYPTED_TEXT_FILE = 'encrypted_file.txt'
+    DECRYPTED_TEXT_FILE = 'decrypted_file.txt'
 
     #---------------   Function to call makeRsaKeys.py main function
     def runRSAKeyFunction(self):
@@ -176,32 +179,28 @@ class PageRSAFunction(tk.Frame):
 
     #---------------   Function to call rsaCipher.py Encryption function
     def runRSAEncryptionFunction(self):
-        PLAIN_TEXT_FILE = 'plainText.txt'
-        ENCRYPTED_TEXT_FILE = 'encrypted_file.txt'
-        DECRYPTED_TEXT_FILE = 'decrypted_file.txt'
-
-        pathEncryptedFile = os.getcwd()+'/'+ENCRYPTED_TEXT_FILE
+        pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE
         if os.path.isfile(pathEncryptedFile):
             showerror(title='ERROR', message='Encrypted file already exist!')
         else: #get size and time
-            msgSize, encryptionTime = rsaCipher.main(mode='encrypt', textFileName=PLAIN_TEXT_FILE)
+            msgSize, encryptionTime = rsaCipher.main(mode='encrypt', textFileName=self.PLAIN_TEXT_FILE)
             if os.path.isfile(pathEncryptedFile):
                 showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
 
     #---------------   Function to call rsaCipher.py Decryption function
     def runRSADecryptionFunction(self):
-        PLAIN_TEXT_FILE = 'plainText.txt'
-        ENCRYPTED_TEXT_FILE = 'encrypted_file.txt'
-        DECRYPTED_TEXT_FILE = 'decrypted_file.txt'
+        #PLAIN_TEXT_FILE = 'plainText.txt'
+        #ENCRYPTED_TEXT_FILE = 'encrypted_file.txt'
+        #DECRYPTED_TEXT_FILE = 'decrypted_file.txt'
 
-        pathDecryptedFile = os.getcwd()+'/'+DECRYPTED_TEXT_FILE
-        pathEncryptedFile = os.getcwd()+'/'+ENCRYPTED_TEXT_FILE
+        pathDecryptedFile = os.getcwd()+'/'+self.DECRYPTED_TEXT_FILE
+        pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE
         if not os.path.isfile(pathEncryptedFile):
             showerror(title='ERROR', message='No Encrypted file found to Decrypt!')
         elif os.path.isfile(pathDecryptedFile):
             showwarning(title='Warning', message='Another decrypted file already exist!')
         else: #get size and time
-            decryptionTime = rsaCipher.main(mode='decrypt', textFileName=DECRYPTED_TEXT_FILE)
+            decryptionTime = rsaCipher.main(mode='decrypt', textFileName=self.DECRYPTED_TEXT_FILE)
             if os.path.isfile(pathDecryptedFile):
                 showinfo(title='Decryption successful!', message='Decryption Time : '+str(decryptionTime))
 
