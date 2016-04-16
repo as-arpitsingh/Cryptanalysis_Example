@@ -164,25 +164,51 @@ class PageRSA(tk.Frame):
 
 class PageRSAFunction(tk.Frame):
 
-
     #---------------   Function to call makeRsaKeys.py main function
     def runRSAKeyFunction(self):
         pathRSAPubKey = os.getcwd()+'/'+'RSA_pubkey.txt'
         pathRSAPrivKey = os.getcwd()+'/'+'RSA_privkey.txt'
         if os.path.isfile(pathRSAPubKey) or os.path.isfile(pathRSAPrivKey):
             print ('Keys already exist!')
-            askokcancel("Warning", "This will delete stuff")
+            #askokcancel("Warning", "This will delete stuff")
+            showerror(title='ERROR', message='Keys already exist!')
         else:
             makeRsaKeys.main()
+            pathRSAPubKey = os.getcwd()+'/'+'RSA_pubkey.txt'
+            pathRSAPrivKey = os.getcwd()+'/'+'RSA_privkey.txt'
+            if os.path.isfile(pathRSAPubKey) or os.path.isfile(pathRSAPrivKey):
+                showinfo(title='Done', message='Created keys successfully!')
 
     #---------------   Function to call rsaCipher.py Encryption function
     def runRSAEncryptionFunction(self):
-        pass
-    
+        PLAIN_TEXT_FILE = 'plainText.txt'
+        ENCRYPTED_TEXT_FILE = 'encrypted_file.txt'
+        DECRYPTED_TEXT_FILE = 'decrypted_file.txt'
+
+        pathEncryptedFile = os.getcwd()+'/'+ENCRYPTED_TEXT_FILE
+        if os.path.isfile(pathEncryptedFile):
+            showerror(title='ERROR', message='Encrypted file already exist!')
+        else: #get size and time
+            rsaCipher.main(mode='encrypt', textFileName=PLAIN_TEXT_FILE)
+            if os.path.isfile(pathEncryptedFile):
+                showinfo(title='Done', message='Encryption successful!')
+
     #---------------   Function to call rsaCipher.py Decryption function
     def runRSADecryptionFunction(self):
-        print ('yoyoyo!')
-    
+        PLAIN_TEXT_FILE = 'plainText.txt'
+        ENCRYPTED_TEXT_FILE = 'encrypted_file.txt'
+        DECRYPTED_TEXT_FILE = 'decrypted_file.txt'
+
+        pathDecryptedFile = os.getcwd()+'/'+DECRYPTED_TEXT_FILE
+        pathEncryptedFile = os.getcwd()+'/'+ENCRYPTED_TEXT_FILE
+        if not os.path.isfile(pathEncryptedFile):
+            showerror(title='ERROR', message='No Encrypted file found to Decrypt!')
+        elif os.path.isfile(pathDecryptedFile):
+            showwarning(title='Warning', message='Another decrypted file already exist!')
+        else: #get size and time
+            rsaCipher.main(mode='decrypt', textFileName=DECRYPTED_TEXT_FILE)
+            if os.path.isfile(pathDecryptedFile):
+                showinfo(title='Done', message='Decryption successful!')
 
 
     def __init__(self, parent, controller):

@@ -9,21 +9,24 @@ import sys, time
 DEFAULT_BLOCK_SIZE = 128 # 128 bytes
 BYTE_SIZE = 256 # One byte has 256 different values.
 
-def main():
+def main(mode, textFileName):
     # Runs a test that encrypts a message to a file or decrypts a message
     # from a file.
-    filename = 'encrypted_file.txt' # the file to write to/read from
-    mode = 'decrypt' # set to 'encrypt' or 'decrypt'
+    encryptedFilename = 'encrypted_file.txt' # the file to write to/read from
+    decryptedFilename = 'decrypted_file.txt'
+    #    mode = 'decrypt' # set to 'encrypt' or 'decrypt'
 
     if mode == 'encrypt':
         startEncryptTime = time.time()
-        plainTextFileName = input("Enter the Plain Text file name:\n")
+        #        plainTextFileName = input("Enter the Plain Text file name:\n")
+        plainTextFileName = textFileName
         plainTextFile = open(plainTextFileName, 'r')
         message = plainTextFile.read()
         plainTextFile.close()
         pubKeyFilename = 'RSA_pubkey.txt'
-        print('Encrypting and writing to %s...' % (filename))
-        encryptedText = encryptAndWriteToFile(filename, pubKeyFilename, message)
+        print('Reading from %s and decrypting...' % (plainTextFileName))
+        print('Encrypting and writing to %s...' % (encryptedFilename))
+        encryptedText = encryptAndWriteToFile(encryptedFilename, pubKeyFilename, message)
         print ('Total time:', time.time()-startEncryptTime)
         print ('Input Size:', len(message))
         print('Encrypted text:')
@@ -32,9 +35,13 @@ def main():
     elif mode == 'decrypt':
         startDecryptTime = time.time()
         privKeyFilename = 'RSA_privkey.txt'
-        print('Reading from %s and decrypting...' % (filename))
-        decryptedText = readFromFileAndDecrypt(filename, privKeyFilename)
+        print('Reading from %s and decrypting...' % (encryptedFilename))
+        decryptedText = readFromFileAndDecrypt(encryptedFilename, privKeyFilename)
         print ('Total time:', time.time()-startDecryptTime)
+        decryptedFilename = textFileName
+        dFile = open(decryptedFilename, 'w')
+        dFile.write(decryptedText)
+        dFile.close()
         print('Decrypted text:')
         print(decryptedText)
 
