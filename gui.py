@@ -14,12 +14,13 @@ import matplotlib.animation as animation
 from matplotlib import style
 import tkinter as tk
 from tkinter import ttk
-import urllib
-import json
-import pandas as pd
+#import urllib
+#import json
+#import pandas as pd
 from matplotlib import pyplot as plt
-import numpy as np
+#import numpy as np
 import makeRsaKeys, rsaCipher
+from tkinter.messagebox import *
 #from tkFileDialog import askopenfilename
 #from PIL import Image
 
@@ -170,6 +171,7 @@ class PageRSAFunction(tk.Frame):
         pathRSAPrivKey = os.getcwd()+'/'+'RSA_privkey.txt'
         if os.path.isfile(pathRSAPubKey) or os.path.isfile(pathRSAPrivKey):
             print ('Keys already exist!')
+            askokcancel("Warning", "This will delete stuff")
         else:
             makeRsaKeys.main()
 
