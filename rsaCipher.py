@@ -27,23 +27,27 @@ def main(mode, textFileName):
         print('Reading from %s and decrypting...' % (plainTextFileName))
         print('Encrypting and writing to %s...' % (encryptedFilename))
         encryptedText = encryptAndWriteToFile(encryptedFilename, pubKeyFilename, message)
-        print ('Total time:', time.time()-startEncryptTime)
+        encryptionTime = time.time()-startEncryptTime
+        print ('Total time:', encryptionTime)
         print ('Input Size:', len(message))
         print('Encrypted text:')
         print(encryptedText)
+        return len(message), encryptionTime
 
     elif mode == 'decrypt':
         startDecryptTime = time.time()
         privKeyFilename = 'RSA_privkey.txt'
         print('Reading from %s and decrypting...' % (encryptedFilename))
         decryptedText = readFromFileAndDecrypt(encryptedFilename, privKeyFilename)
-        print ('Total time:', time.time()-startDecryptTime)
+        decryptionTime = time.time()-startDecryptTime
+        print ('Total time:', decryptionTime)
         decryptedFilename = textFileName
         dFile = open(decryptedFilename, 'w')
         dFile.write(decryptedText)
         dFile.close()
         print('Decrypted text:')
         print(decryptedText)
+        return decryptionTime
 
 def getBlocksFromText(message, blockSize=DEFAULT_BLOCK_SIZE):
     # Converts a string message to a list of block integers. Each integer

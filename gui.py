@@ -14,15 +14,10 @@ import matplotlib.animation as animation
 from matplotlib import style
 import tkinter as tk
 from tkinter import ttk
-#import urllib
 #import json
-#import pandas as pd
 from matplotlib import pyplot as plt
-#import numpy as np
 import makeRsaKeys, rsaCipher
 from tkinter.messagebox import *
-#from tkFileDialog import askopenfilename
-#from PIL import Image
 
 ################################################################################
 #---------------   initializing global variables
@@ -189,9 +184,9 @@ class PageRSAFunction(tk.Frame):
         if os.path.isfile(pathEncryptedFile):
             showerror(title='ERROR', message='Encrypted file already exist!')
         else: #get size and time
-            rsaCipher.main(mode='encrypt', textFileName=PLAIN_TEXT_FILE)
+            msgSize, encryptionTime = rsaCipher.main(mode='encrypt', textFileName=PLAIN_TEXT_FILE)
             if os.path.isfile(pathEncryptedFile):
-                showinfo(title='Done', message='Encryption successful!')
+                showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
 
     #---------------   Function to call rsaCipher.py Decryption function
     def runRSADecryptionFunction(self):
@@ -206,9 +201,9 @@ class PageRSAFunction(tk.Frame):
         elif os.path.isfile(pathDecryptedFile):
             showwarning(title='Warning', message='Another decrypted file already exist!')
         else: #get size and time
-            rsaCipher.main(mode='decrypt', textFileName=DECRYPTED_TEXT_FILE)
+            decryptionTime = rsaCipher.main(mode='decrypt', textFileName=DECRYPTED_TEXT_FILE)
             if os.path.isfile(pathDecryptedFile):
-                showinfo(title='Done', message='Decryption successful!')
+                showinfo(title='Decryption successful!', message='Decryption Time : '+str(decryptionTime))
 
 
     def __init__(self, parent, controller):
