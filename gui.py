@@ -16,14 +16,15 @@ import tkinter as tk
 from tkinter import ttk
 #import json
 from matplotlib import pyplot as plt
-import makeRsaKeys, rsaCipher
+import makeRsaKeys, rsaCipher, pyDes
 from tkinter.messagebox import *
+#from tkinter import *
 
 ################################################################################
 #---------------   initializing global variables
 ################################################################################
 
-INTRO_TEXT = 'CS685 Computer Security Project'
+INTRO_TEXT = 'Welcome!'
 PROJECT_NAME = 'Cryptanalysis'
 LARGE_FONT = ("Helvetica", 16)
 MID_FONT= ("Verdana", 12)
@@ -288,12 +289,15 @@ class PageDES(tk.Frame):
 
 
 class PageDESFunction(tk.Frame):
+    def printKey(self):
+        print (self.entry1.get())
     
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label1 = tk.Label(self, text="DES Function", font=LARGE_FONT)
         label1.pack(pady=10,padx=10, side=PACK_SIDE)
         label1.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
 
         button1 = ttk.Button(self, text="Main Menu", command=lambda: controller.show_frame(PageMainMenu))
         button1.pack(side=PACK_SIDE)
@@ -303,9 +307,29 @@ class PageDESFunction(tk.Frame):
         button2.pack(side=PACK_SIDE)
         button2.place(relx=4*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
+
         paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
         paButton.pack(side=PACK_SIDE)
         paButton.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+
+
+#--------
+
+        label2 = ttk.Label(self, text="Enter DES Key of Length=8:", font=LARGE_FONT)
+        label2.pack(pady=10,padx=10, side=PACK_SIDE)
+        label2.place(relx=2*PLACE_HORIZONTAL_SPACING, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+
+        self.entry1 = tk.Entry(self)
+        self.entry1.pack(pady=10,padx=10, side=PACK_SIDE)
+        self.entry1.place(relx=4*PLACE_HORIZONTAL_SPACING, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        
+        self.button3 = ttk.Button(self, text="Submit", command=self.printKey)
+        self.button3.pack(side=PACK_SIDE)
+        self.button3.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+
 
 
 class PageDESLib(tk.Frame):
