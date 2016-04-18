@@ -8,7 +8,7 @@
 #-------- get Bytes --> 'Sting'.encode('UTF-8')
 #-------- get String --> 'Bytes'.decode('UTF-8')
 
-import matplotlib, os, re, time
+import matplotlib, os, re, time, pdb
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
@@ -26,6 +26,8 @@ from tkinter.messagebox import *
 #---------------   initializing global variables
 ################################################################################
 
+CURRENT_DIRECTORY = os.getcwd()
+print (CURRENT_DIRECTORY)
 INTRO_TEXT = 'Welcome!'
 PROJECT_NAME = 'Cryptanalysis'
 LARGE_FONT = ("Helvetica", 16)
@@ -274,10 +276,6 @@ class PageRSALib(tk.Frame):
 #---------------   DES Page
 ################################################################################
 class PageDES(tk.Frame):
-    PLAIN_TEXT_FILE_DESF = PLAIN_TEXT_FILE
-    ENCRYPTED_TEXT_FILE_DESF = 'DESF_'+ENCRYPTED_TEXT_FILE
-    DECRYPTED_TEXT_FILE_DESF = 'DESF_'+DECRYPTED_TEXT_FILE
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label1 = tk.Label(self, text="DES", font=LARGE_FONT)
@@ -302,6 +300,9 @@ class PageDES(tk.Frame):
 
 
 class PageDESFunction(tk.Frame):
+    PLAIN_TEXT_FILE_DESF = PLAIN_TEXT_FILE
+    ENCRYPTED_TEXT_FILE_DESF = 'DESF_'+ENCRYPTED_TEXT_FILE
+    DECRYPTED_TEXT_FILE_DESF = 'DESF_'+DECRYPTED_TEXT_FILE
     DES_INSTANCE_FLAG = False
     DES_KEY = ''
     
@@ -311,8 +312,8 @@ class PageDESFunction(tk.Frame):
             self.keyDes = self.entry1.get()
             self.keyDesBytes = self.keyDes.encode('UTF-8')
             self.keyDesString = self.keyDesBytes.decode('UTF-8')
-            DES_KEY = self.keyDesBytes
-            print (DES_KEY)
+            self.DES_KEY = self.keyDesBytes
+            print (self.DES_KEY)
             showinfo(title='Key Validated Sucessfully!', message='The value entered for the key has been accepted!')
             showwarning(title='Remember your Key!', message='Please make sure to remember or securely store your key, since it will be cleared from the entry box once you click "OK"!\nEntered Key : "%s"'% self.keyDes)
             self.entry1.delete(0,len(self.keyDes))
@@ -328,9 +329,12 @@ class PageDESFunction(tk.Frame):
         elif os.path.isfile(pathEncryptedFile):
             showerror(title='ERROR', message='Encrypted file already exists!')
         else: #get size and time
-            desInstance = pyDes.des(DES_KEY, pyDes.CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=pyDes.PAD_PKCS5)
-            self.DES_INSTANCE_FLAG = True
-        print (DES_KEY, self.DES_INSTANCE_FLAG)
+            if self.DES_KEY == '':
+                print ('No Key!')
+            else:
+                desInstance = pyDes.des(self.DES_KEY, pyDes.CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=pyDes.PAD_PKCS5)
+                self.DES_INSTANCE_FLAG = True
+        print (self.DES_KEY, self.DES_INSTANCE_FLAG)
 
 
 #---------------   Function to Encrypt using DES Function Class
@@ -338,26 +342,27 @@ class PageDESFunction(tk.Frame):
         encryptionStartTime = time.time()
         if self.DES_INSTANCE_FLAG == False:
             self.instantiateClasspyDes()
-        if self.DES_INSTANCE_FLAG == True:
-            if DES_KEY == '':
-                print ('No Key!')
+        if self.DES_KEY == '':
+            print ('No Key!')
+        else:
+            print ('its encryption time')
+            #get size and time
+            pdb.set_trace()
+            dataToEncryptFile = open(CURRENT_DIRECTORY+'/'+self.PLAIN_TEXT_FILE_DESF, 'r')
+            dataToEncrypt = dataToEncryptFile.read()
+            msgSize = len(dataToEncrypt)
+            encryptedData = self.desInstance.encrypt(dataToEncrypt)
+            dataToEncryptFile.close()
+            # write encrypted content to file.
+            encryptedDataFile = open(CURRENT_DIRECTORY+'/'+self.ENCRYPTED_TEXT_FILE_DESF, 'w')
+            self.encryptedDataFile.write(self.encryptedData)
+            self.encryptedDataFile.close()
+            pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESF
+            if os.path.isfile(self.pathEncryptedFile):
+                encryptionTime = time.time() - self.encryptionStartTime
+                showinfo(title='Encryption successful!', message='Input Message Size : '+str(self.msgSize)+'\nEncryption Time : '+str(self.encryptionTime))
             else:
-                print ('its encryption time')
-                #get size and time
-                dataToEncryptFile = open(PLAIN_TEXT_FILE_DESF, 'r')
-                dataToEncrypt = dataToEncryptFile.read()
-                msgSize = len(dataToEncrypt)
-                encryptedData = desInstance.encrypt(dataToEncrypt)
-                dataToEncryptFile.close()
-                # write encrypted content to file.
-                encryptedDataFile = open(ENCRYPTED_TEXT_FILE_DESF, 'w')
-                encryptedDataFile.write(encryptedData)
-                encryptedDataFile.close()
-                pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESF
-                if os.path.isfile(pathEncryptedFile):
-                    encryptionTime = time.time() - encryptionStartTime
-                    showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
-
+                showerror(title='ERROR', message='Some ERROR occured!')
 
 
 #---------------   Function to Decrypt using DES Function Class
