@@ -37,6 +37,12 @@ PLACE_ANCHOR = 'center'
 PACK_SIDE = 'top'
 style.use("ggplot")
 
+PLAIN_TEXT_FILE = 'plainText.txt'
+ENCRYPTED_TEXT_FILE = 'encrypted_file.txt'
+DECRYPTED_TEXT_FILE = 'decrypted_file.txt'
+
+
+
 f = Figure()
 a = f.add_subplot(111)
 
@@ -159,11 +165,11 @@ class PageRSA(tk.Frame):
 
 
 class PageRSAFunction(tk.Frame):
-    PLAIN_TEXT_FILE = 'plainText.txt'
-    ENCRYPTED_TEXT_FILE = 'encrypted_file.txt'
-    DECRYPTED_TEXT_FILE = 'decrypted_file.txt'
+    PLAIN_TEXT_FILE_RSAF = 'plainText.txt'
+    ENCRYPTED_TEXT_FILE_RSAF = 'encrypted_file.txt'
+    DECRYPTED_TEXT_FILE_RSAF = 'decrypted_file.txt'
 
-    #---------------   Function to call makeRsaKeys.py main function
+    #---------------   Function to call makeRsaKeys.py main function to generate Keys
     def runRSAKeyFunction(self):
         pathRSAPubKey = os.getcwd()+'/'+'RSA_pubkey.txt'
         pathRSAPrivKey = os.getcwd()+'/'+'RSA_privkey.txt'
@@ -180,28 +186,24 @@ class PageRSAFunction(tk.Frame):
 
     #---------------   Function to call rsaCipher.py Encryption function
     def runRSAEncryptionFunction(self):
-        pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE
+        pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_RSAF
         if os.path.isfile(pathEncryptedFile):
             showerror(title='ERROR', message='Encrypted file already exist!')
         else: #get size and time
-            msgSize, encryptionTime = rsaCipher.main(mode='encrypt', textFileName=self.PLAIN_TEXT_FILE)
+            msgSize, encryptionTime = rsaCipher.main(mode='encrypt', textFileName=self.PLAIN_TEXT_FILE_RSAF)
             if os.path.isfile(pathEncryptedFile):
                 showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
 
     #---------------   Function to call rsaCipher.py Decryption function
     def runRSADecryptionFunction(self):
-        #PLAIN_TEXT_FILE = 'plainText.txt'
-        #ENCRYPTED_TEXT_FILE = 'encrypted_file.txt'
-        #DECRYPTED_TEXT_FILE = 'decrypted_file.txt'
-
-        pathDecryptedFile = os.getcwd()+'/'+self.DECRYPTED_TEXT_FILE
-        pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE
+        pathDecryptedFile = os.getcwd()+'/'+self.DECRYPTED_TEXT_FILE_RSAF
+        pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_RSAF
         if not os.path.isfile(pathEncryptedFile):
             showerror(title='ERROR', message='No Encrypted file found to Decrypt!')
         elif os.path.isfile(pathDecryptedFile):
             showwarning(title='Warning', message='Another decrypted file already exist!')
         else: #get size and time
-            decryptionTime = rsaCipher.main(mode='decrypt', textFileName=self.DECRYPTED_TEXT_FILE)
+            decryptionTime = rsaCipher.main(mode='decrypt', textFileName=self.DECRYPTED_TEXT_FILE_RSAF)
             if os.path.isfile(pathDecryptedFile):
                 showinfo(title='Decryption successful!', message='Decryption Time : '+str(decryptionTime))
 
@@ -289,8 +291,17 @@ class PageDES(tk.Frame):
 
 
 class PageDESFunction(tk.Frame):
-    def printKey(self):
-        print (self.entry1.get())
+
+    #---------------   Function to call makeRsaKeys.py main function
+    def getDesKey(self):
+        if len(self.entry1.get()) == 8:
+            self.keyDes = self.entry1.get()
+            self.keyDesBytes = self.keyDes.encode('UTF-8')
+            self.keyDesString = self.keyDesBytes.decode('UTF-8')
+            print (self.keyDes, self.keyDesBytes, self.keyDesString)
+            showinfo(title='Key Validated Sucessfully!', message='The value entered for the key has been accepted!')
+        else:
+            showerror(title='ERROR', message='Length of key entered must be 8 characters only! Please enter again.')
     
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -314,18 +325,19 @@ class PageDESFunction(tk.Frame):
 
 
 
-#--------
+#-------- get Bytes --> 'Sting'.encode('UTF-8')
+#-------- get String --> 'Bytes'.decode('UTF-8')
 
-        label2 = ttk.Label(self, text="Enter DES Key of Length=8:", font=LARGE_FONT)
+        label2 = ttk.Label(self, text="Enter DES Key", font=LARGE_FONT)
         label2.pack(pady=10,padx=10, side=PACK_SIDE)
         label2.place(relx=2*PLACE_HORIZONTAL_SPACING, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
 
-        self.entry1 = tk.Entry(self)
+        self.entry1 = tk.Entry(self, width=8)
         self.entry1.pack(pady=10,padx=10, side=PACK_SIDE)
         self.entry1.place(relx=4*PLACE_HORIZONTAL_SPACING, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
         
-        self.button3 = ttk.Button(self, text="Submit", command=self.printKey)
+        self.button3 = ttk.Button(self, text="Submit", command=self.getDesKey)
         self.button3.pack(side=PACK_SIDE)
         self.button3.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
