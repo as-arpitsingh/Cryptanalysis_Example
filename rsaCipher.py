@@ -36,7 +36,7 @@ def main(mode, textFileName):
 
     elif mode == 'decrypt':
         startDecryptTime = time.time()
-        privKeyFilename = 'RSA_privkey.txt'
+        privKeyFilename = 'RSAF_privkey.txt'
         print('Reading from %s and decrypting...' % (encryptedFilename))
         decryptedText = readFromFileAndDecrypt(encryptedFilename, privKeyFilename)
         decryptionTime = time.time()-startDecryptTime
