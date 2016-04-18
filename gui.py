@@ -323,6 +323,23 @@ class PageDESFunction(tk.Frame):
 
 #---------------   Function to call pyDes.des(b'key', pyDes.CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=pyDes.PAD_PKCS5) to initialize class
     def instantiateClasspyDes(self):
+            if self.DES_KEY == '':
+                print ('No Key!')
+                showerror(title='ERROR', message='No Key! Please enter the DES Key first.')
+            else:
+                self.DES_INSTANCE = pyDes.des(self.DES_KEY, pyDes.CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=pyDes.PAD_PKCS5)
+                self.DES_INSTANCE_FLAG = True
+            print (self.DES_KEY, self.DES_INSTANCE_FLAG, 'desInstance:', self.DES_INSTANCE)
+
+
+#---------------   Function to Encrypt using DES Function Class
+    def runDESFunctionEncryption(self):
+        encryptionStartTime = time.time()
+        if self.DES_INSTANCE_FLAG == False:
+            self.instantiateClasspyDes()
+        if self.DES_KEY == '':
+            print ('No Key!')
+            showerror(title='ERROR', message='No Key! Please enter the DES Key first.')
         pathPlaintTextFile = os.getcwd()+'/'+self.PLAIN_TEXT_FILE_DESF
         pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESF
         if not os.path.isfile(pathPlaintTextFile):
@@ -330,24 +347,6 @@ class PageDESFunction(tk.Frame):
         elif os.path.isfile(pathEncryptedFile):
             showerror(title='ERROR', message='Encrypted file already exists!')
         else: #get size and time
-            if self.DES_KEY == '':
-                print ('No Key!')
-            else:
-                self.DES_INSTANCE = pyDes.des(self.DES_KEY, pyDes.CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=pyDes.PAD_PKCS5)
-                self.DES_INSTANCE_FLAG = True
-            print (self.DES_KEY, self.DES_INSTANCE_FLAG, 'desInstance:', self.DES_INSTANCE)
-        return
-
-
-#---------------   Function to Encrypt using DES Function Class
-    def runDESFunctionEncryption(self):
-        #pdb.set_trace()
-        encryptionStartTime = time.time()
-        if self.DES_INSTANCE_FLAG == False:
-            self.instantiateClasspyDes()
-        if self.DES_KEY == '':
-            print ('No Key!')
-        else:
             print ('its encryption time')
             #get size and time
             dataToEncryptFile = open(CURRENT_DIRECTORY+'/'+self.PLAIN_TEXT_FILE_DESF, 'r')
@@ -369,7 +368,37 @@ class PageDESFunction(tk.Frame):
 
 #---------------   Function to Decrypt using DES Function Class
     def runDESFunctionDecryption(self):
-        print ('Lets decrypt now')
+        decryptionStartTime = time.time()
+        if self.DES_INSTANCE_FLAG == False:
+            self.instantiateClasspyDes()
+        if self.DES_KEY == '':
+            print ('No Key!')
+            showerror(title='ERROR', message='No Key! Please enter the DES Key first.')
+        pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESF
+        pathDecryptedFile = os.getcwd()+'/'+self.DECRYPTED_TEXT_FILE_DESF
+        if not os.path.isfile(pathEncryptedFile):
+            showerror(title='ERROR', message='No Encrypted file found to Decrypt!')
+        elif os.path.isfile(pathDecryptedFile):
+            showerror(title='ERROR', message='Decrypted file already exists!')
+        else: #get size and time
+            print ('Lets decrypt now')
+            #get size and time
+            dataToDecryptFile = open(CURRENT_DIRECTORY+'/'+self.ENCRYPTED_TEXT_FILE_DESF, 'rb')
+            dataToDecrypt = dataToDecryptFile.read()
+            dataToDecryptFile.close()
+            decryptedDataBytes = self.DES_INSTANCE.decrypt(dataToDecrypt)
+            decryptedData = decryptedDataBytes.decode('utf-8')
+            # write encrypted content to file.
+            decryptedDataFile = open(CURRENT_DIRECTORY+'/'+self.DECRYPTED_TEXT_FILE_DESF, 'w')
+            decryptedDataFile.write(decryptedData)
+            decryptedDataFile.close()
+            pathDecryptedFile = os.getcwd()+'/'+self.DECRYPTED_TEXT_FILE_DESF
+            if os.path.isfile(pathDecryptedFile):
+                decryptionTime = time.time() - decryptionStartTime
+                showinfo(title='Decryption successful!', message='Decryption Time : '+str(decryptionTime))
+            else:
+                showerror(title='ERROR', message='Some ERROR occured!')
+
 
 
 #---------------   DES Function Class : Main function
