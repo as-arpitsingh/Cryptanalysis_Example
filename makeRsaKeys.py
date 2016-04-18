@@ -9,7 +9,7 @@ from dependencies import rabinMiller, cryptomath
 def main():
     # create a public/private keypair with 1024 bit keys
     print('Making key files...')
-    makeKeyFiles('RSA', 1024)
+    makeKeyFiles('RSAF', 1024)
     print('Key files made.')
 
 def generateKey(keySize):

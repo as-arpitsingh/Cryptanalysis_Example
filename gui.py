@@ -5,8 +5,10 @@
 ################################################################################
 #---------------   importing dependencies
 ################################################################################
+#-------- get Bytes --> 'Sting'.encode('UTF-8')
+#-------- get String --> 'Bytes'.decode('UTF-8')
 
-import matplotlib, os, re, datetime
+import matplotlib, os, re, time
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
@@ -18,7 +20,7 @@ from tkinter import ttk
 from matplotlib import pyplot as plt
 import makeRsaKeys, rsaCipher, pyDes
 from tkinter.messagebox import *
-#from tkinter import *
+
 
 ################################################################################
 #---------------   initializing global variables
@@ -165,34 +167,40 @@ class PageRSA(tk.Frame):
 
 
 class PageRSAFunction(tk.Frame):
-    PLAIN_TEXT_FILE_RSAF = 'plainText.txt'
-    ENCRYPTED_TEXT_FILE_RSAF = 'encrypted_file.txt'
-    DECRYPTED_TEXT_FILE_RSAF = 'decrypted_file.txt'
+    PLAIN_TEXT_FILE_RSAF = PLAIN_TEXT_FILE
+    ENCRYPTED_TEXT_FILE_RSAF = 'RSAF_'+ENCRYPTED_TEXT_FILE
+    DECRYPTED_TEXT_FILE_RSAF = 'RSAF_'+DECRYPTED_TEXT_FILE
+    PUBLIC_KEY_FILE_RSAF = 'RSAF_pubkey.txt'
+    PRIVATE_KEY_FILE_RSAF = 'RSAF_privkey.txt'
 
     #---------------   Function to call makeRsaKeys.py main function to generate Keys
     def runRSAKeyFunction(self):
-        pathRSAPubKey = os.getcwd()+'/'+'RSA_pubkey.txt'
-        pathRSAPrivKey = os.getcwd()+'/'+'RSA_privkey.txt'
+        pathRSAPubKey = os.getcwd()+'/'+self.PUBLIC_KEY_FILE_RSAF
+        pathRSAPrivKey = os.getcwd()+'/'+self.PRIVATE_KEY_FILE_RSAF
         if os.path.isfile(pathRSAPubKey) or os.path.isfile(pathRSAPrivKey):
             print ('Keys already exist!')
             #askokcancel("Warning", "This will delete stuff")
             showerror(title='ERROR', message='Keys already exist!')
         else:
             makeRsaKeys.main()
-            pathRSAPubKey = os.getcwd()+'/'+'RSA_pubkey.txt'
-            pathRSAPrivKey = os.getcwd()+'/'+'RSA_privkey.txt'
+            pathRSAPubKey = os.getcwd()+'/'+self.PUBLIC_KEY_FILE_RSAF
+            pathRSAPrivKey = os.getcwd()+'/'+self.PRIVATE_KEY_FILE_RSAF
             if os.path.isfile(pathRSAPubKey) or os.path.isfile(pathRSAPrivKey):
                 showinfo(title='Done', message='Created keys successfully!')
 
     #---------------   Function to call rsaCipher.py Encryption function
     def runRSAEncryptionFunction(self):
+        pathPlaintTextFile = os.getcwd()+'/'+self.PLAIN_TEXT_FILE_RSAF
         pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_RSAF
-        if os.path.isfile(pathEncryptedFile):
-            showerror(title='ERROR', message='Encrypted file already exist!')
+        if not os.path.isfile(pathPlaintTextFile):
+            showerror(title='ERROR', message='Plain Text file is missing!')
+        elif os.path.isfile(pathEncryptedFile):
+            showerror(title='ERROR', message='Encrypted file already exists!')
         else: #get size and time
             msgSize, encryptionTime = rsaCipher.main(mode='encrypt', textFileName=self.PLAIN_TEXT_FILE_RSAF)
             if os.path.isfile(pathEncryptedFile):
                 showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
+                print ('encryption time: '+str(encryptionTime))
 
     #---------------   Function to call rsaCipher.py Decryption function
     def runRSADecryptionFunction(self):
@@ -201,13 +209,13 @@ class PageRSAFunction(tk.Frame):
         if not os.path.isfile(pathEncryptedFile):
             showerror(title='ERROR', message='No Encrypted file found to Decrypt!')
         elif os.path.isfile(pathDecryptedFile):
-            showwarning(title='Warning', message='Another decrypted file already exist!')
+            showwarning(title='Warning', message='Another decrypted file already exists!')
         else: #get size and time
             decryptionTime = rsaCipher.main(mode='decrypt', textFileName=self.DECRYPTED_TEXT_FILE_RSAF)
             if os.path.isfile(pathDecryptedFile):
                 showinfo(title='Decryption successful!', message='Decryption Time : '+str(decryptionTime))
 
-
+#---------------   RSA Function Class : Main function
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label1 = tk.Label(self, text="RSA Function", font=LARGE_FONT)
@@ -266,6 +274,9 @@ class PageRSALib(tk.Frame):
 #---------------   DES Page
 ################################################################################
 class PageDES(tk.Frame):
+    PLAIN_TEXT_FILE_DESF = PLAIN_TEXT_FILE
+    ENCRYPTED_TEXT_FILE_DESF = 'DESF_'+ENCRYPTED_TEXT_FILE
+    DECRYPTED_TEXT_FILE_DESF = 'DESF_'+DECRYPTED_TEXT_FILE
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -291,18 +302,70 @@ class PageDES(tk.Frame):
 
 
 class PageDESFunction(tk.Frame):
-
+    DES_INSTANCE_FLAG = False
+    DES_KEY = ''
+    
     #---------------   Function to call makeRsaKeys.py main function
     def getDesKey(self):
         if len(self.entry1.get()) == 8:
             self.keyDes = self.entry1.get()
             self.keyDesBytes = self.keyDes.encode('UTF-8')
             self.keyDesString = self.keyDesBytes.decode('UTF-8')
-            print (self.keyDes, self.keyDesBytes, self.keyDesString)
+            DES_KEY = self.keyDesBytes
+            print (DES_KEY)
             showinfo(title='Key Validated Sucessfully!', message='The value entered for the key has been accepted!')
+            showwarning(title='Remember your Key!', message='Please make sure to remember or securely store your key, since it will be cleared from the entry box once you click "OK"!\nEntered Key : "%s"'% self.keyDes)
+            self.entry1.delete(0,len(self.keyDes))
         else:
             showerror(title='ERROR', message='Length of key entered must be 8 characters only! Please enter again.')
-    
+
+#---------------   Function to call pyDes.des(b'key', pyDes.CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=pyDes.PAD_PKCS5) to initialize class
+    def instantiateClasspyDes(self):
+        pathPlaintTextFile = os.getcwd()+'/'+self.PLAIN_TEXT_FILE_DESF
+        pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESF
+        if not os.path.isfile(pathPlaintTextFile):
+            showerror(title='ERROR', message='Plain Text file is missing!')
+        elif os.path.isfile(pathEncryptedFile):
+            showerror(title='ERROR', message='Encrypted file already exists!')
+        else: #get size and time
+            desInstance = pyDes.des(DES_KEY, pyDes.CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=pyDes.PAD_PKCS5)
+            self.DES_INSTANCE_FLAG = True
+        print (DES_KEY, self.DES_INSTANCE_FLAG)
+
+
+#---------------   Function to Encrypt using DES Function Class
+    def runDESFunctionEncryption(self):
+        encryptionStartTime = time.time()
+        if self.DES_INSTANCE_FLAG == False:
+            self.instantiateClasspyDes()
+        if self.DES_INSTANCE_FLAG == True:
+            if DES_KEY == '':
+                print ('No Key!')
+            else:
+                print ('its encryption time')
+                #get size and time
+                dataToEncryptFile = open(PLAIN_TEXT_FILE_DESF, 'r')
+                dataToEncrypt = dataToEncryptFile.read()
+                msgSize = len(dataToEncrypt)
+                encryptedData = desInstance.encrypt(dataToEncrypt)
+                dataToEncryptFile.close()
+                # write encrypted content to file.
+                encryptedDataFile = open(ENCRYPTED_TEXT_FILE_DESF, 'w')
+                encryptedDataFile.write(encryptedData)
+                encryptedDataFile.close()
+                pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESF
+                if os.path.isfile(pathEncryptedFile):
+                    encryptionTime = time.time() - encryptionStartTime
+                    showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
+
+
+
+#---------------   Function to Decrypt using DES Function Class
+    def runDESFunctionDecryption(self):
+        print ('Lets decrypt now')
+
+
+#---------------   DES Function Class : Main function
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label1 = tk.Label(self, text="DES Function", font=LARGE_FONT)
@@ -318,20 +381,14 @@ class PageDESFunction(tk.Frame):
         button2.pack(side=PACK_SIDE)
         button2.place(relx=4*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
-
         paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
         paButton.pack(side=PACK_SIDE)
         paButton.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
 
-
-#-------- get Bytes --> 'Sting'.encode('UTF-8')
-#-------- get String --> 'Bytes'.decode('UTF-8')
-
         label2 = ttk.Label(self, text="Enter DES Key", font=LARGE_FONT)
         label2.pack(pady=10,padx=10, side=PACK_SIDE)
         label2.place(relx=2*PLACE_HORIZONTAL_SPACING, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
-
 
         self.entry1 = tk.Entry(self, width=8)
         self.entry1.pack(pady=10,padx=10, side=PACK_SIDE)
@@ -340,6 +397,17 @@ class PageDESFunction(tk.Frame):
         self.button3 = ttk.Button(self, text="Submit", command=self.getDesKey)
         self.button3.pack(side=PACK_SIDE)
         self.button3.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+
+        button2 = ttk.Button(self, text="DES Function Encryption", command=self.runDESFunctionEncryption)
+        button2.pack(side=PACK_SIDE)
+        button2.place(relx=2*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+        paButton = ttk.Button(self, text="DES Function Encryption", command=self.runDESFunctionDecryption)
+        paButton.pack(side=PACK_SIDE)
+        paButton.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+
 
 
 

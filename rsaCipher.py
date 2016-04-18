@@ -12,8 +12,8 @@ BYTE_SIZE = 256 # One byte has 256 different values.
 def main(mode, textFileName):
     # Runs a test that encrypts a message to a file or decrypts a message
     # from a file.
-    encryptedFilename = 'encrypted_file.txt' # the file to write to/read from
-    decryptedFilename = 'decrypted_file.txt'
+    encryptedFilename = 'RSAF_encrypted_file.txt' # the file to write to/read from
+    decryptedFilename = 'RSAF_decrypted_file.txt'
     #    mode = 'decrypt' # set to 'encrypt' or 'decrypt'
 
     if mode == 'encrypt':
@@ -23,8 +23,8 @@ def main(mode, textFileName):
         plainTextFile = open(plainTextFileName, 'r')
         message = plainTextFile.read()
         plainTextFile.close()
-        pubKeyFilename = 'RSA_pubkey.txt'
-        print('Reading from %s and decrypting...' % (plainTextFileName))
+        pubKeyFilename = 'RSAF_pubkey.txt'
+        print('Reading from %s ...' % (plainTextFileName))
         print('Encrypting and writing to %s...' % (encryptedFilename))
         encryptedText = encryptAndWriteToFile(encryptedFilename, pubKeyFilename, message)
         encryptionTime = time.time()-startEncryptTime
