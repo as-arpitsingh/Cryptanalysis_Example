@@ -58,16 +58,24 @@ a = f.add_subplot(111)
 def animate(i):
     pullData = open("performanceAnalysis.text","r").read()
     dataList = pullData.split('\n')
-    xList = []
-    yList = []
+    labelList = []
+    encryptionList = []
+    decryptionList = []
     for eachLine in dataList:
         if len(eachLine) > 1:
-            x, y = eachLine.split(',')
-            xList.append(int(x))
-            yList.append(int(y))
+            x, y, z = eachLine.split(',')
+            labelList.append(x)
+            encryptionList.append(int(y))
+            decryptionList.append(int(z))
+    print (labelList, encryptionList, decryptionList)
+    #plt.clear()
+    plt.clf()
+    plt.xticks(encryptionList, labelList)
+    plt.plot(encryptionList, decryptionList, linewidth=6.0)
+    plt.show()
+    #plt.xticks(encryptionList, labelList, rotation='vertical')
 
-    a.clear()
-    a.plot(xList, yList)
+    #a.plot(xList, zList, linewidth=2.0)
 
 
 ################################################################################
@@ -502,7 +510,7 @@ class PagePerformanceAnalysis(tk.Frame):
 def main():
     app = Cryptanalysis()
     app.geometry("1280x720")
-    ani = animation.FuncAnimation(f, animate, interval=1000)
+    ani = animation.FuncAnimation(f, animate, interval=1000000)
     app.mainloop()
 
 if __name__ == '__main__':
