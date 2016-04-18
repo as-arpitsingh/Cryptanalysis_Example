@@ -303,6 +303,7 @@ class PageDESFunction(tk.Frame):
     PLAIN_TEXT_FILE_DESF = PLAIN_TEXT_FILE
     ENCRYPTED_TEXT_FILE_DESF = 'DESF_'+ENCRYPTED_TEXT_FILE
     DECRYPTED_TEXT_FILE_DESF = 'DESF_'+DECRYPTED_TEXT_FILE
+    DES_INSTANCE = ''
     DES_INSTANCE_FLAG = False
     DES_KEY = ''
     
@@ -332,13 +333,15 @@ class PageDESFunction(tk.Frame):
             if self.DES_KEY == '':
                 print ('No Key!')
             else:
-                desInstance = pyDes.des(self.DES_KEY, pyDes.CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=pyDes.PAD_PKCS5)
+                self.DES_INSTANCE = pyDes.des(self.DES_KEY, pyDes.CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=pyDes.PAD_PKCS5)
                 self.DES_INSTANCE_FLAG = True
-        print (self.DES_KEY, self.DES_INSTANCE_FLAG)
+            print (self.DES_KEY, self.DES_INSTANCE_FLAG, 'desInstance:', self.DES_INSTANCE)
+        return
 
 
 #---------------   Function to Encrypt using DES Function Class
     def runDESFunctionEncryption(self):
+        #pdb.set_trace()
         encryptionStartTime = time.time()
         if self.DES_INSTANCE_FLAG == False:
             self.instantiateClasspyDes()
@@ -347,20 +350,19 @@ class PageDESFunction(tk.Frame):
         else:
             print ('its encryption time')
             #get size and time
-            pdb.set_trace()
             dataToEncryptFile = open(CURRENT_DIRECTORY+'/'+self.PLAIN_TEXT_FILE_DESF, 'r')
             dataToEncrypt = dataToEncryptFile.read()
-            msgSize = len(dataToEncrypt)
-            encryptedData = self.desInstance.encrypt(dataToEncrypt)
             dataToEncryptFile.close()
+            msgSize = len(dataToEncrypt)
+            encryptedData = self.DES_INSTANCE.encrypt(dataToEncrypt)
             # write encrypted content to file.
-            encryptedDataFile = open(CURRENT_DIRECTORY+'/'+self.ENCRYPTED_TEXT_FILE_DESF, 'w')
-            self.encryptedDataFile.write(self.encryptedData)
-            self.encryptedDataFile.close()
+            encryptedDataFile = open(CURRENT_DIRECTORY+'/'+self.ENCRYPTED_TEXT_FILE_DESF, 'wb')
+            encryptedDataFile.write(encryptedData)
+            encryptedDataFile.close()
             pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESF
-            if os.path.isfile(self.pathEncryptedFile):
-                encryptionTime = time.time() - self.encryptionStartTime
-                showinfo(title='Encryption successful!', message='Input Message Size : '+str(self.msgSize)+'\nEncryption Time : '+str(self.encryptionTime))
+            if os.path.isfile(pathEncryptedFile):
+                encryptionTime = time.time() - encryptionStartTime
+                showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
             else:
                 showerror(title='ERROR', message='Some ERROR occured!')
 
