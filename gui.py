@@ -45,10 +45,22 @@ PLAIN_TEXT_FILE = 'plainText.txt'
 ENCRYPTED_TEXT_FILE = 'encrypted_file.txt'
 DECRYPTED_TEXT_FILE = 'decrypted_file.txt'
 
+# X-axis labels of the Performance Graph:
+# 1 --> RSA Function
+# 2 --> RSA Lib.
+# 3 --> DES Function
+# 3 --> DES Lib.
+
+LABEL_LIST = [1, 2, 3, 4]
+ENCRYPTION_TIME_LIST = [0,0,0,0]
+DECRYPTION_TIME_LIST = [0,0,0,0]
+INPUT_LEN_LIST = [0,0,0,0]
+
 
 
 f = Figure()
 a = f.add_subplot(111)
+b = a.twinx()
 
 ################################################################################
 #---------------   Functions
@@ -61,22 +73,34 @@ def animate(i):
     labelList = []
     encryptionList = []
     decryptionList = []
-    for eachLine in dataList:
-        if len(eachLine) > 1:
-            x, y, z = eachLine.split(',')
-            labelList.append(x)
-            encryptionList.append(int(y))
-            decryptionList.append(int(z))
-    print (labelList, encryptionList, decryptionList)
-    #plt.clear()
-    plt.clf()
-    plt.xticks(encryptionList, labelList)
-    plt.plot(encryptionList, decryptionList, linewidth=6.0)
-    plt.show()
-    #plt.xticks(encryptionList, labelList, rotation='vertical')
+    inputLengthList = []
+        #    for eachLine in dataList:
+        #        if len(eachLine) > 1:
+        #            x, y, z, l = eachLine.split(',')
+        #            labelList.append(int(x))
+        #            encryptionList.append(int(y))
+        #            decryptionList.append(int(z))
+        #            inputLengthList.append(int(l))
+        #        else:
+        #            print ('Empty File')
 
-    #a.plot(xList, zList, linewidth=2.0)
+    labelList = LABEL_LIST
+    encryptionList = ENCRYPTION_TIME_LIST
+    decryptionList = DECRYPTION_TIME_LIST
+    inputLengthList = INPUT_LEN_LIST
 
+    a.clear()
+
+    a.plot(labelList, encryptionList, linewidth=2.0, color='r')
+    a.plot(labelList, decryptionList, linewidth=2.0, color='g')
+    b.plot(labelList, inputLengthList, linewidth=2.0, color='b')
+
+    a.set_xlabel('Encryption Algorithm')
+    a.set_ylabel('Encryption / Decryption Time (sec.)', color='r')
+    b.set_ylabel('Input Length (character length)', color='b')
+
+
+# add legends
 
 ################################################################################
 #---------------   Main Class
@@ -210,6 +234,8 @@ class PageRSAFunction(tk.Frame):
             msgSize, encryptionTime = rsaCipher.main(mode='encrypt', textFileName=self.PLAIN_TEXT_FILE_RSAF)
             if os.path.isfile(pathEncryptedFile):
                 showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
+                ENCRYPTION_TIME_LIST[0] = encryptionTime
+                INPUT_LEN_LIST[0] = msgSize
                 print ('encryption time: '+str(encryptionTime))
 
     #---------------   Function to call rsaCipher.py Decryption function
@@ -224,6 +250,7 @@ class PageRSAFunction(tk.Frame):
             decryptionTime = rsaCipher.main(mode='decrypt', textFileName=self.DECRYPTED_TEXT_FILE_RSAF)
             if os.path.isfile(pathDecryptedFile):
                 showinfo(title='Decryption successful!', message='Decryption Time : '+str(decryptionTime))
+                DECRYPTION_TIME_LIST[0] = decryptionTime
 
 #---------------   RSA Function Class : Main function
     def __init__(self, parent, controller):
@@ -370,6 +397,8 @@ class PageDESFunction(tk.Frame):
             if os.path.isfile(pathEncryptedFile):
                 encryptionTime = time.time() - encryptionStartTime
                 showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
+                ENCRYPTION_TIME_LIST[2] = encryptionTime
+                INPUT_LEN_LIST[2] = msgSize
             else:
                 showerror(title='ERROR', message='Some ERROR occured!')
 
@@ -404,6 +433,7 @@ class PageDESFunction(tk.Frame):
             if os.path.isfile(pathDecryptedFile):
                 decryptionTime = time.time() - decryptionStartTime
                 showinfo(title='Decryption successful!', message='Decryption Time : '+str(decryptionTime))
+                DECRYPTION_TIME_LIST[2] = decryptionTime
             else:
                 showerror(title='ERROR', message='Some ERROR occured!')
 
@@ -510,7 +540,7 @@ class PagePerformanceAnalysis(tk.Frame):
 def main():
     app = Cryptanalysis()
     app.geometry("1280x720")
-    ani = animation.FuncAnimation(f, animate, interval=1000000)
+    ani = animation.FuncAnimation(f, animate, interval=1000)
     app.mainloop()
 
 if __name__ == '__main__':
