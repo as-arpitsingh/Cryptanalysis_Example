@@ -39,6 +39,8 @@ from rsa import common as RSALcommon
 from Crypto import Random
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import DES
+from Crypto.Hash import SHA256
+from Crypto.Hash import MD5
 
 ################################################################################
 #---------------   initializing global variables
@@ -117,7 +119,7 @@ class Cryptanalysis(tk.Tk):
 
         self.frames = {}
 
-        for F in (PageMainMenu, PageRSA, PageDES, PageRSAFunction, PageRSALib, PageDESFunction, PageDESLib, PagePerformanceAnalysis):
+        for F in (PageMainMenu, PageRSA, PageDES, PageRSAFunction, PageRSALib, PageDESFunction, PageDESLib, PagePerformanceAnalysis, PageHashFunction):
 
             frame = F(container, self)
 
@@ -150,19 +152,75 @@ class PageMainMenu(tk.Frame):
         
         button1 = ttk.Button(self, text="RSA", command=lambda: controller.show_frame(PageRSA))
         button1.pack(side=PACK_SIDE)
-        button1.place(relx=0.5, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        button1.place(relx=0.5, rely=5*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
         button2 = ttk.Button(self, text="DES", command=lambda: controller.show_frame(PageDES))
+        button2.pack(side=PACK_SIDE)
+        button2.place(relx=0.5, rely=7*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+        paButton = ttk.Button(self, text="Hash Function", command=lambda: controller.show_frame(PageHashFunction))
+        paButton.pack(side=PACK_SIDE)
+        paButton.place(relx=0.5, rely=9*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+        paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
+        paButton.pack(side=PACK_SIDE)
+        paButton.place(relx=0.5, rely=11*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+        quitButton = ttk.Button(self, text="Quit", command=quit)
+        quitButton.pack(side=PACK_SIDE)
+        quitButton.place(relx=0.5, rely=15*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+################################################################################
+#---------------   Hash Function Page
+################################################################################
+
+class PageHashFunction(tk.Frame):
+    def get_file_checksum(self):
+        h = MD5.new()
+        chunk_size = 8192
+        with open(PLAIN_TEXT_FILE, 'rb') as f:
+            while True:
+                chunk = f.read(chunk_size)
+                if len(chunk) == 0:
+                    break
+                h.update(chunk)
+        return h.hexdigest()
+
+
+    def hashFunc(self):
+        if not os.path.isfile(os.getcwd()+'/'+PLAIN_TEXT_FILE):
+            showerror(title='ERROR', message='Plain Text file is missing!')
+        else:
+            checkSum = self.get_file_checksum()
+            if checkSum:
+                showinfo(title='Checksum', message='Checksum for the Plain Text file is:\n\n%s'% checkSum)
+            else:
+                showerror(title='ERROR', message='Checksum could not be calculated for the Plain Text File.')
+
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        labelTitle = tk.Label(self, text="Hash Function", font=LARGE_FONT)
+        labelTitle.pack(pady=10,padx=10, side=PACK_SIDE)
+        labelTitle.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        
+        button1 = ttk.Button(self, text="Main Menu", command=lambda: controller.show_frame(PageMainMenu))
+        button1.pack(side=PACK_SIDE)
+        button1.place(relx=0.5, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+        labelCS = tk.Label(self, text="Hash Function to calculate Checksum", font=LARGE_FONT)
+        labelCS.pack(pady=10,padx=10, side=PACK_SIDE)
+        labelCS.place(relx=0.5, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+        button2 = ttk.Button(self, text="Get Checksum", command=self.hashFunc)
         button2.pack(side=PACK_SIDE)
         button2.place(relx=0.5, rely=8*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
         paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
         paButton.pack(side=PACK_SIDE)
-        paButton.place(relx=0.5, rely=10*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        paButton.place(relx=0.5, rely=15*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
-        quitButton = ttk.Button(self, text="Quit", command=quit)
-        quitButton.pack(side=PACK_SIDE)
-        quitButton.place(relx=0.5, rely=15*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
 
 ################################################################################
 #---------------   RSA Page
