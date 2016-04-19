@@ -36,9 +36,9 @@ import rsa as RSAL
 from rsa import key  as RSALkey
 from rsa import common as RSALcommon
 
-from Crypto.PublicKey import RSA
 from Crypto import Random
-from Crypto.Cipher import DES3
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import DES
 
 ################################################################################
 #---------------   initializing global variables
@@ -254,7 +254,7 @@ class PageRSAFunction(tk.Frame):
         button2.pack(side=PACK_SIDE)
         button2.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
-        button4 = ttk.Button(self, text="Make RSA Keys", command=self.runRSAKeyFunction)
+        button4 = ttk.Button(self, text="Generate RSA Function Keys", command=self.runRSAKeyFunction)
         button4.pack(side=PACK_SIDE)
         button4.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
         
@@ -561,9 +561,111 @@ class PageDESFunction(tk.Frame):
 
 
 
+###################################################################################################################################################
+class PageDESLib(tk.Frame): #-------- DES CFB mode.
+    PLAIN_TEXT_FILE_DESL = PLAIN_TEXT_FILE
+    ENCRYPTED_TEXT_FILE_DESL = 'DESL_'+ENCRYPTED_TEXT_FILE
+    DECRYPTED_TEXT_FILE_DESL = 'DESL_'+DECRYPTED_TEXT_FILE
+    DES_INSTANCE1 = ''
+    DES_INSTANCE2 = ''
+    DES_INSTANCE_FLAG = False
+    DES_KEY = ''
 
-class PageDESLib(tk.Frame):
-    
+    #---------------   Function to get the DES key from the user
+    def getDesKey(self):
+        if len(self.entry1.get()) == 8:
+            self.keyDes = self.entry1.get()
+            self.keyDesBytes = self.keyDes.encode('UTF-8')
+            self.keyDesString = self.keyDesBytes.decode('UTF-8')
+            self.DES_KEY = self.keyDesBytes
+            showinfo(title='Key Validated Sucessfully!', message='The value entered for the key has been accepted!')
+            showwarning(title='Remember your Key!', message='Please make sure to remember or securely store your key, since it will be cleared from the entry box once you click "OK"!\nEntered Key : "%s"'% self.keyDes)
+            self.entry1.delete(0,len(self.keyDes))
+        else:
+            showerror(title='ERROR', message='Length of key entered must be 8 characters only! Please enter again.')
+
+    #---------------   Function to create instances od DES for CFB mode.
+    def instantiateClassDesLib(self):
+        if self.DES_KEY == '':
+            showerror(title='ERROR', message='No Key! Please enter the DES Key first.')
+        else:
+            iv = Random.get_random_bytes(8)
+            self.DES_INSTANCE1 = DES.new(self.DES_KEY, DES.MODE_CFB, iv)
+            self.DES_INSTANCE2 = DES.new(self.DES_KEY, DES.MODE_CFB, iv)
+            self.DES_INSTANCE_FLAG = True
+
+
+    #---------------   Function to Encrypt using DES Lib. Class
+    def runDESLibEncryption(self):
+        encryptionStartTime = time.time()
+        if self.DES_INSTANCE_FLAG == False:
+            self.instantiateClassDesLib()
+        if self.DES_KEY == '':
+            showerror(title='ERROR', message='No Key! Please enter the DES Key first.')
+        pathPlaintTextFile = os.getcwd()+'/'+self.PLAIN_TEXT_FILE_DESL
+        pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESL
+        if not os.path.isfile(pathPlaintTextFile):
+            showerror(title='ERROR', message='Plain Text file is missing!')
+        elif os.path.isfile(pathEncryptedFile):
+            showerror(title='ERROR', message='Encrypted file already exists!')
+        else:
+            dataToEncryptFile = open(CURRENT_DIRECTORY+'/'+self.PLAIN_TEXT_FILE_DESL, 'r')
+            dataToEncrypt = dataToEncryptFile.read()
+            dataToEncryptFile.close()
+            msgSize = len(dataToEncrypt)
+            encryptedData = self.DES_INSTANCE1.encrypt(dataToEncrypt)
+            encryptedDataFile = open(CURRENT_DIRECTORY+'/'+self.ENCRYPTED_TEXT_FILE_DESL, 'wb')
+            encryptedDataFile.write(encryptedData)
+            encryptedDataFile.close()
+            pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESL
+            if os.path.isfile(pathEncryptedFile):
+                encryptionTime = time.time() - encryptionStartTime
+                showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
+                ENCRYPTION_TIME_LIST[3] = encryptionTime
+                INPUT_LEN_LIST[3] = msgSize
+            else:
+                showerror(title='ERROR', message='Some ERROR occured!')
+
+
+    #---------------   Function to Decrypt using DES Lib Class
+    def runDESLibDecryption(self):
+        decryptionStartTime = time.time()
+        if self.DES_INSTANCE_FLAG == False:
+            self.instantiateClassDesLib()
+        if self.DES_KEY == '':
+            showerror(title='ERROR', message='No Key! Please enter the DES Key first.')
+        pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESL
+        pathDecryptedFile = os.getcwd()+'/'+self.DECRYPTED_TEXT_FILE_DESL
+        if not os.path.isfile(pathEncryptedFile):
+            showerror(title='ERROR', message='No Encrypted file found to Decrypt!')
+        elif os.path.isfile(pathDecryptedFile):
+            showerror(title='ERROR', message='Decrypted file already exists!')
+        else:
+            dataToDecryptFile = open(CURRENT_DIRECTORY+'/'+self.ENCRYPTED_TEXT_FILE_DESL, 'rb')
+            dataToDecrypt = dataToDecryptFile.read()
+            dataToDecryptFile.close()
+            decryptedDataBytes = self.DES_INSTANCE2.decrypt(dataToDecrypt)
+            decryptedData = decryptedDataBytes.decode('utf-8')
+            decryptedDataFile = open(CURRENT_DIRECTORY+'/'+self.DECRYPTED_TEXT_FILE_DESL, 'w')
+            decryptedDataFile.write(decryptedData)
+            decryptedDataFile.close()
+            pathDecryptedFile = os.getcwd()+'/'+self.DECRYPTED_TEXT_FILE_DESL
+            if os.path.isfile(pathDecryptedFile):
+                decryptionTime = time.time() - decryptionStartTime
+                showinfo(title='Decryption successful!', message='Decryption Time : '+str(decryptionTime))
+                DECRYPTION_TIME_LIST[2] = decryptionTime
+            else:
+                showerror(title='ERROR', message='Some ERROR occured!')
+
+
+
+###################################################################################################################################################
+
+
+
+
+
+#---------------   DES Lib Class : Main function
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         labelTitle = tk.Label(self, text="DES Lib.", font=LARGE_FONT)
@@ -574,10 +676,25 @@ class PageDESLib(tk.Frame):
         buttonDESHome.pack(side=PACK_SIDE)
         buttonDESHome.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
-
-
-
-
+        labelKey = ttk.Label(self, text="Enter DES Key", font=LARGE_FONT)
+        labelKey.pack(pady=10,padx=10, side=PACK_SIDE)
+        labelKey.place(relx=4*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        
+        self.entry1 = tk.Entry(self, width=8)
+        self.entry1.pack(pady=10,padx=10, side=PACK_SIDE)
+        self.entry1.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        
+        self.button3 = ttk.Button(self, text="Submit", command=self.getDesKey)
+        self.button3.pack(side=PACK_SIDE)
+        self.button3.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        
+        buttonEnFunc = ttk.Button(self, text="DES Lib. Encryption", command=self.runDESLibEncryption)
+        buttonEnFunc.pack(side=PACK_SIDE)
+        buttonEnFunc.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=8*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        
+        buttonDeFunc = ttk.Button(self, text="DES Lib. Encryption", command=self.runDESLibDecryption)
+        buttonDeFunc.pack(side=PACK_SIDE)
+        buttonDeFunc.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=10*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
         paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
         paButton.pack(side=PACK_SIDE)
