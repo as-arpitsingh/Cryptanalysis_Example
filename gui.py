@@ -209,8 +209,10 @@ class PageRSAFunction(tk.Frame):
             makeRsaKeys.main()
             pathRSAPubKey = os.getcwd()+'/'+self.PUBLIC_KEY_FILE_RSAF
             pathRSAPrivKey = os.getcwd()+'/'+self.PRIVATE_KEY_FILE_RSAF
-            if os.path.isfile(pathRSAPubKey) or os.path.isfile(pathRSAPrivKey):
+            if os.path.isfile(pathRSAPubKey) and os.path.isfile(pathRSAPrivKey):
                 showinfo(title='Done', message='Created keys successfully!')
+            else:
+                showerror(title='ERROR', message='One of the keys missing!')
 
     #---------------   Function to call rsaCipher.py Encryption function
     def runRSAEncryptionFunction(self):
@@ -270,7 +272,7 @@ class PageRSAFunction(tk.Frame):
 
 
 class PageRSALib(tk.Frame):
-        PLAIN_TEXT_FILE_RSAL = PLAIN_TEXT_FILE
+        PLAIN_TEXT_FILE_RSAL = 'RSAL_'+PLAIN_TEXT_FILE
         ENCRYPTED_TEXT_FILE_RSAL = 'RSAL_'+ENCRYPTED_TEXT_FILE
         DECRYPTED_TEXT_FILE_RSAL = 'RSAL_'+DECRYPTED_TEXT_FILE
         RSALKEY = ''
@@ -280,42 +282,63 @@ class PageRSALib(tk.Frame):
 
         #---------------   Function to generate keys unsing RSA Lib.
         def initializeRSAKeyLib(self):
-            random_generator = Random.new().read
-            key = RSA.generate(1024, random_generator)
-            self.RSALKEY = key
-            # write keys to files
-            fo_pub = open(self.PUBLIC_KEY_FILE_RSAL, 'w')
-            fo_pub.write((key.publickey().exportKey('PEM')).decode('utf-8'))
-            fo_pub.close()
-            fo_priv = open(self.PRIVATE_KEY_FILE_RSAL, 'w')
-            fo_priv.write((key.exportKey('PEM')).decode('utf-8'))
-            fo_priv.close()
+            pathRSAPubKey = os.getcwd()+'/'+self.PUBLIC_KEY_FILE_RSAL
+            pathRSAPrivKey = os.getcwd()+'/'+self.PRIVATE_KEY_FILE_RSAL
+            if os.path.isfile(pathRSAPubKey) or os.path.isfile(pathRSAPrivKey):
+                showerror(title='ERROR', message='Keys already exist!')
+            else:
+                random_generator = Random.new().read
+                key = RSA.generate(1024, random_generator)
+                self.RSALKEY = key
+                fo_pub = open(self.PUBLIC_KEY_FILE_RSAL, 'w')
+                fo_pub.write((key.publickey().exportKey('PEM')).decode('utf-8'))
+                fo_pub.close()
+                fo_priv = open(self.PRIVATE_KEY_FILE_RSAL, 'w')
+                fo_priv.write((key.exportKey('PEM')).decode('utf-8'))
+                fo_priv.close()
+                pathRSAPubKey = os.getcwd()+'/'+self.PUBLIC_KEY_FILE_RSAL
+                pathRSAPrivKey = os.getcwd()+'/'+self.PRIVATE_KEY_FILE_RSAL
+                if os.path.isfile(pathRSAPubKey) and os.path.isfile(pathRSAPrivKey):
+                    showinfo(title='Done', message='Created keys successfully!')
+                else:
+                    showerror(title='ERROR', message='One of the keys missing!')
+                
 
 
         #---------------   Function to encrypt unsing RSA Lib.
         def runRSAEncryptionLib(self):
-            #RSA.importKey(externKey, passphrase=None)
-            fo_pub = open(self.PUBLIC_KEY_FILE_RSAL,'r')
-            key = RSA.importKey(fo_pub.read())
-            key = self.RSALKEY
-            fo_pub.close()
-            print ('RSLA_Key', self.RSALKEY)
-            
-            dataToEncryptFile = open(self.PLAIN_TEXT_FILE_RSAL, 'r')
-            dataToEncrypt = dataToEncryptFile.read()
-            dataToEncryptBytes = dataToEncrypt.encode('utf-8')
-            dataToEncryptFile.close()
-            pdb.set_trace()
-            public_key = key.publickey()
-            print (public_key)
-            print ('dataToEncryptBytes: ', dataToEncryptBytes)
-            encryptedData = public_key.encrypt(dataToEncryptBytes, 32)
-            print (encryptedData)
-            self.ENCRYPTED_DATA = encryptedData
-
-            encryptedDataFile = open(self.ENCRYPTED_TEXT_FILE_RSAL, 'w')
-            encryptedDataFile.write(str(list(encryptedData)))
-            encryptedDataFile.close()
+            pathPlaintTextFile = os.getcwd()+'/'+self.PLAIN_TEXT_FILE_RSAL
+            pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_RSAL
+            if not os.path.isfile(pathPlaintTextFile):
+                showerror(title='ERROR', message='Plain Text file is missing!')
+            elif os.path.isfile(pathEncryptedFile):
+                showerror(title='ERROR', message='Encrypted file already exists!')
+            else:
+                fo_pub = open(self.PUBLIC_KEY_FILE_RSAL,'r')
+                key = RSA.importKey(fo_pub.read())
+                key = self.RSALKEY
+                fo_pub.close()
+                
+                dataToEncryptFile = open(self.PLAIN_TEXT_FILE_RSAL, 'r')
+                dataToEncrypt = dataToEncryptFile.read()
+                msgSize = len(dataToEncrypt)
+                dataToEncryptBytes = dataToEncrypt.encode('utf-8')
+                dataToEncryptFile.close()
+                public_key = key.publickey()
+                encryptionStartTime = time.time()
+                encryptedData = public_key.encrypt(dataToEncryptBytes, 32)
+                encryptionTime = time.time() - encryptionStartTime
+                self.ENCRYPTED_DATA = encryptedData
+                encryptedDataFile = open(self.ENCRYPTED_TEXT_FILE_RSAL, 'w')
+                encryptedDataFile.write(str(list(encryptedData)))
+                encryptedDataFile.close()
+                pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_RSAL
+                if os.path.isfile(pathEncryptedFile):
+                    showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
+                    ENCRYPTION_TIME_LIST[1] = encryptionTime
+                    INPUT_LEN_LIST[1] = msgSize
+                else:
+                    showerror(title='ERROR', message='Some ERROR occured!')
 
         #---------------   Function to decrypt unsing RSA Lib.
         def runRSADecryptionLib(self):
@@ -323,16 +346,29 @@ class PageRSALib(tk.Frame):
             key = RSA.importKey(fo_pub.read())
             fo_pub.close()
             private_key = self.RSALKEY
-            
-            encryptedDataFile = open(self.ENCRYPTED_TEXT_FILE_RSAL, 'r')
-            encryptedData = tuple(encryptedDataFile.read())
-            encryptedDataFile.close()
-            encryptedData = self.ENCRYPTED_DATA
-            print (encryptedData)
+            pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_RSAL
+            pathDecryptedFile = os.getcwd()+'/'+self.DECRYPTED_TEXT_FILE_RSAL
+            if not os.path.isfile(pathEncryptedFile):
+                showerror(title='ERROR', message='No Encrypted file found to Decrypt!')
+            elif os.path.isfile(pathDecryptedFile):
+                showerror(title='ERROR', message='Decrypted file already exists!')
+            else:
+                encryptedDataFile = open(self.ENCRYPTED_TEXT_FILE_RSAL, 'r')
+                encryptedData = tuple(encryptedDataFile.read())
+                encryptedDataFile.close()
+                encryptedData = self.ENCRYPTED_DATA
+                decryptionStartTime = time.time()
+                decryptedData = private_key.decrypt(encryptedData)
+                decryptionTime = time.time() - decryptionStartTime
+                decryptedDataFile = open(self.DECRYPTED_TEXT_FILE_RSAL, 'w')
+                decryptedDataFile.write(decryptedData.decode('utf-8'))
+                decryptedDataFile.close()
+                if os.path.isfile(os.getcwd()+'/'+self.DECRYPTED_TEXT_FILE_RSAL):
+                    showinfo(title='Decryption successful!', message='Decryption Time : '+str(decryptionTime))
+                    DECRYPTION_TIME_LIST[1] = decryptionTime
+                else:
+                    showerror(title='ERROR', message='Some ERROR occured!')
 
-            decryptedData = private_key.decrypt(encryptedData)
-            print (decryptedData)
-        # write decrypted data to file
 
 
 
