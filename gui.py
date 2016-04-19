@@ -276,6 +276,7 @@ class PageRSALib(tk.Frame):
         ENCRYPTED_TEXT_FILE_RSAL = 'RSAL_'+ENCRYPTED_TEXT_FILE
         DECRYPTED_TEXT_FILE_RSAL = 'RSAL_'+DECRYPTED_TEXT_FILE
         RSALKEY = ''
+        RSALKEY_FLAG = False
         PUBLIC_KEY_FILE_RSAL = 'RSAL_pubkey.pem'
         PRIVATE_KEY_FILE_RSAL = 'RSAL_privkey.pem'
         ENCRYPTED_DATA = ''
@@ -290,6 +291,7 @@ class PageRSALib(tk.Frame):
                 random_generator = Random.new().read
                 key = RSA.generate(1024, random_generator)
                 self.RSALKEY = key
+                self.RSALKEY_FLAG = True
                 fo_pub = open(self.PUBLIC_KEY_FILE_RSAL, 'w')
                 fo_pub.write((key.publickey().exportKey('PEM')).decode('utf-8'))
                 fo_pub.close()
@@ -309,6 +311,8 @@ class PageRSALib(tk.Frame):
         def runRSAEncryptionLib(self):
             pathPlaintTextFile = os.getcwd()+'/'+self.PLAIN_TEXT_FILE_RSAL
             pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_RSAL
+            if self.RSALKEY_FLAG == False:
+                showerror(title='ERROR', message='Check Keys!')
             if not os.path.isfile(pathPlaintTextFile):
                 showerror(title='ERROR', message='Plain Text file is missing!')
             elif os.path.isfile(pathEncryptedFile):
@@ -383,7 +387,7 @@ class PageRSALib(tk.Frame):
             button2.pack(side=PACK_SIDE)
             button2.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
-            button4 = ttk.Button(self, text="Make RSA Lib. Keys", command=self.initializeRSAKeyLib)
+            button4 = ttk.Button(self, text="Generate RSA Lib. Keys", command=self.initializeRSAKeyLib)
             button4.pack(side=PACK_SIDE)
             button4.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
         
@@ -560,8 +564,6 @@ class PageDESFunction(tk.Frame):
         paButton.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=15*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
 
-
-###################################################################################################################################################
 class PageDESLib(tk.Frame): #-------- DES CFB mode.
     PLAIN_TEXT_FILE_DESL = PLAIN_TEXT_FILE
     ENCRYPTED_TEXT_FILE_DESL = 'DESL_'+ENCRYPTED_TEXT_FILE
