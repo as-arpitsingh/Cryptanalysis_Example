@@ -88,11 +88,7 @@ def animate(i):
     width = 0.2
     barEn = a.bar(ind, encryptionList, width, color='b')
     barDe = a.bar(ind+width, decryptionList, width, color='g')
-    #    a.bar(labelList, encryptionList, width, label="Encryption", align="center", color='b')
-    #    a.bar(labelList, decryptionList, width, label="Decryption", align="center", color='g')
-
-    b.plot(ind, inputLengthList, linewidth=2.0, color='r')
-
+    b.plot(ind+width, inputLengthList, linewidth=2.0, color='r')
     a.set_title('Performance Analysis by Encryption Algorithm')
     a.set_xticks(ind + width)
     a.set_xticklabels(xTicksLabelList)
@@ -101,8 +97,6 @@ def animate(i):
     a.set_ylabel('Encryption / Decryption Time (sec.)', color='b')
     b.set_ylabel('Input Size (in char len)', color='r')
 
-
-# add legends
 
 ################################################################################
 #---------------   Main Class
