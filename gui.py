@@ -16,7 +16,7 @@ import matplotlib.animation as animation
 from matplotlib import style
 import tkinter as tk
 from tkinter import ttk
-#import json
+import numpy as np
 from matplotlib import pyplot as plt
 import makeRsaKeys, rsaCipher, pyDes
 from tkinter.messagebox import *
@@ -52,6 +52,7 @@ DECRYPTED_TEXT_FILE = 'decrypted_file.txt'
 # 3 --> DES Lib.
 
 LABEL_LIST = [1, 2, 3, 4]
+#LABEL_LIST = ['RSAF', 'RSAL', 'DESF', 'DESL']
 ENCRYPTION_TIME_LIST = [0,0,0,0]
 DECRYPTION_TIME_LIST = [0,0,0,0]
 INPUT_LEN_LIST = [0,0,0,0]
@@ -74,30 +75,31 @@ def animate(i):
     encryptionList = []
     decryptionList = []
     inputLengthList = []
-        #    for eachLine in dataList:
-        #        if len(eachLine) > 1:
-        #            x, y, z, l = eachLine.split(',')
-        #            labelList.append(int(x))
-        #            encryptionList.append(int(y))
-        #            decryptionList.append(int(z))
-        #            inputLengthList.append(int(l))
-        #        else:
-        #            print ('Empty File')
 
+    xTicksLabelList = ['RSAF', 'RSAL', 'DESF', 'DESL']
     labelList = LABEL_LIST
     encryptionList = ENCRYPTION_TIME_LIST
     decryptionList = DECRYPTION_TIME_LIST
     inputLengthList = INPUT_LEN_LIST
-
     a.clear()
 
-    a.plot(labelList, encryptionList, linewidth=2.0, color='r')
-    a.plot(labelList, decryptionList, linewidth=2.0, color='g')
-    b.plot(labelList, inputLengthList, linewidth=2.0, color='b')
+    N = 4
+    ind = np.arange(N)
+    width = 0.2
+    barEn = a.bar(ind, encryptionList, width, color='b')
+    barDe = a.bar(ind+width, decryptionList, width, color='g')
+    #    a.bar(labelList, encryptionList, width, label="Encryption", align="center", color='b')
+    #    a.bar(labelList, decryptionList, width, label="Decryption", align="center", color='g')
 
+    b.plot(ind, inputLengthList, linewidth=2.0, color='r')
+
+    a.set_title('Performance Analysis by Encryption Algorithm')
+    a.set_xticks(ind + width)
+    a.set_xticklabels(xTicksLabelList)
+    a.legend((barEn[0], barDe[0]), ('Ecryption', 'Decryption'))
     a.set_xlabel('Encryption Algorithm')
-    a.set_ylabel('Encryption / Decryption Time (sec.)', color='r')
-    b.set_ylabel('Input Length (character length)', color='b')
+    a.set_ylabel('Encryption / Decryption Time (sec.)', color='b')
+    b.set_ylabel('Input Size (in char len)', color='r')
 
 
 # add legends
