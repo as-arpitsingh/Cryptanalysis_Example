@@ -24,29 +24,29 @@ def main(mode, textFileName):
         message = plainTextFile.read()
         plainTextFile.close()
         pubKeyFilename = 'RSAF_pubkey.txt'
-        print('Reading from %s ...' % (plainTextFileName))
-        print('Encrypting and writing to %s...' % (encryptedFilename))
+        #print('Reading from %s ...' % (plainTextFileName))
+        #print('Encrypting and writing to %s...' % (encryptedFilename))
         encryptedText = encryptAndWriteToFile(encryptedFilename, pubKeyFilename, message)
         encryptionTime = time.time()-startEncryptTime
-        print ('Total time:', encryptionTime)
-        print ('Input Size:', len(message))
-        print('Encrypted text:')
-        print(encryptedText)
+        #print ('Total time:', encryptionTime)
+        #print ('Input Size:', len(message))
+        #print('Encrypted text:')
+        #print(encryptedText)
         return len(message), encryptionTime
 
     elif mode == 'decrypt':
         startDecryptTime = time.time()
         privKeyFilename = 'RSAF_privkey.txt'
-        print('Reading from %s and decrypting...' % (encryptedFilename))
+        #print('Reading from %s and decrypting...' % (encryptedFilename))
         decryptedText = readFromFileAndDecrypt(encryptedFilename, privKeyFilename)
         decryptionTime = time.time()-startDecryptTime
-        print ('Total time:', decryptionTime)
+        #print ('Total time:', decryptionTime)
         decryptedFilename = textFileName
         dFile = open(decryptedFilename, 'w')
         dFile.write(decryptedText)
         dFile.close()
-        print('Decrypted text:')
-        print(decryptedText)
+        #print('Decrypted text:')
+        #print(decryptedText)
         return decryptionTime
 
 def getBlocksFromText(message, blockSize=DEFAULT_BLOCK_SIZE):

@@ -8,23 +8,23 @@ from dependencies import rabinMiller, cryptomath
 
 def main():
     # create a public/private keypair with 1024 bit keys
-    print('Making key files...')
+    #print('Making key files...')
     makeKeyFiles('RSAF', 1024)
-    print('Key files made.')
+    #print('Key files made.')
 
 def generateKey(keySize):
     # Creates a public/private key pair with keys that are keySize bits in
     # size. This function may take a while to run.
 
     # Step 1: Create two prime numbers, p and q. Calculate n = p * q.
-    print('Generating p prime...')
+    #print('Generating p prime...')
     p = rabinMiller.generateLargePrime(keySize)
-    print('Generating q prime...')
+    #print('Generating q prime...')
     q = rabinMiller.generateLargePrime(keySize)
     n = p * q
 
     # Step 2: Create a number e that is relatively prime to (p-1)*(q-1).
-    print('Generating e that is relatively prime to (p-1)*(q-1)...')
+    #print('Generating e that is relatively prime to (p-1)*(q-1)...')
     while True:
         # Keep trying random numbers for e until one is valid.
         e = random.randrange(2 ** (keySize - 1), 2 ** (keySize))
@@ -32,14 +32,14 @@ def generateKey(keySize):
             break
 
     # Step 3: Calculate d, the mod inverse of e.
-    print('Calculating d that is mod inverse of e...')
+    #print('Calculating d that is mod inverse of e...')
     d = cryptomath.findModInverse(e, (p - 1) * (q - 1))
 
     publicKey = (n, e)
     privateKey = (n, d)
 
-    print('Public key:', publicKey)
-    print('Private key:', privateKey)
+    #print('Public key:', publicKey)
+    #print('Private key:', privateKey)
 
     return (publicKey, privateKey)
 
@@ -55,16 +55,16 @@ def makeKeyFiles(name, keySize):
 
     publicKey, privateKey = generateKey(keySize)
 
-    print()
-    print('The public key is a %s and a %s digit number.' % (len(str(publicKey[0])), len(str(publicKey[1]))))
-    print('Writing public key to file %s_pubkey.txt...' % (name))
+    #print()
+    #print('The public key is a %s and a %s digit number.' % (len(str(publicKey[0])), len(str(publicKey[1]))))
+    #print('Writing public key to file %s_pubkey.txt...' % (name))
     fo = open('%s_pubkey.txt' % (name), 'w')
     fo.write('%s,%s,%s' % (keySize, publicKey[0], publicKey[1]))
     fo.close()
 
-    print()
-    print('The private key is a %s and a %s digit number.' % (len(str(publicKey[0])), len(str(publicKey[1]))))
-    print('Writing private key to file %s_privkey.txt...' % (name))
+    #print()
+    #print('The private key is a %s and a %s digit number.' % (len(str(publicKey[0])), len(str(publicKey[1]))))
+    #print('Writing private key to file %s_privkey.txt...' % (name))
     fo = open('%s_privkey.txt' % (name), 'w')
     fo.write('%s,%s,%s' % (keySize, privateKey[0], privateKey[1]))
     fo.close()
