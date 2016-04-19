@@ -89,14 +89,14 @@ def animate(i):
     width = 0.2
     barEn = a.bar(ind, encryptionList, width, color='b')
     barDe = a.bar(ind+width, decryptionList, width, color='g')
-    b.plot(ind+width, inputLengthList, linewidth=1.0, color='r')
     a.set_title('Performance Analysis by Encryption Algorithm')
     a.set_xticks(ind + width)
     a.set_xticklabels(xTicksLabelList)
     a.legend((barEn[0], barDe[0]), ('Ecryption', 'Decryption'))
     a.set_xlabel('Encryption Algorithm')
-    a.set_ylabel('Encryption / Decryption Time (sec.)', color='b')
+    a.set_ylabel('Encryption / Decryption Time (milliseconds)', color='b')
     b.set_ylabel('Input Size (in char len)', color='r')
+    b.plot(ind+width, inputLengthList, linewidth=1.0, color='r')
 
 
 ################################################################################
@@ -224,6 +224,7 @@ class PageRSAFunction(tk.Frame):
             showerror(title='ERROR', message='Encrypted file already exists!')
         else: #get size and time
             msgSize, encryptionTime = rsaCipher.main(mode='encrypt', textFileName=self.PLAIN_TEXT_FILE_RSAF)
+            encryptionTime = round((encryptionTime*1000), 2)
             if os.path.isfile(pathEncryptedFile):
                 showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
                 ENCRYPTION_TIME_LIST[0] = encryptionTime
@@ -239,6 +240,7 @@ class PageRSAFunction(tk.Frame):
             showwarning(title='Warning', message='Another decrypted file already exists!')
         else: #get size and time
             decryptionTime = rsaCipher.main(mode='decrypt', textFileName=self.DECRYPTED_TEXT_FILE_RSAF)
+            decryptionTime = round((decryptionTime)*1000, 2)
             if os.path.isfile(pathDecryptedFile):
                 showinfo(title='Decryption successful!', message='Decryption Time : '+str(decryptionTime))
                 DECRYPTION_TIME_LIST[0] = decryptionTime
@@ -331,7 +333,7 @@ class PageRSALib(tk.Frame):
                 public_key = key.publickey()
                 encryptionStartTime = time.time()
                 encryptedData = public_key.encrypt(dataToEncryptBytes, 32)
-                encryptionTime = time.time() - encryptionStartTime
+                encryptionTime = round((time.time() - encryptionStartTime)*1000, 2)
                 self.ENCRYPTED_DATA = encryptedData
                 encryptedDataFile = open(self.ENCRYPTED_TEXT_FILE_RSAL, 'w')
                 encryptedDataFile.write(str(list(encryptedData)))
@@ -363,7 +365,7 @@ class PageRSALib(tk.Frame):
                 encryptedData = self.ENCRYPTED_DATA
                 decryptionStartTime = time.time()
                 decryptedData = private_key.decrypt(encryptedData)
-                decryptionTime = time.time() - decryptionStartTime
+                decryptionTime = round((time.time() - decryptionStartTime)*1000, 2)
                 decryptedDataFile = open(self.DECRYPTED_TEXT_FILE_RSAL, 'w')
                 decryptedDataFile.write(decryptedData.decode('utf-8'))
                 decryptedDataFile.close()
@@ -487,7 +489,7 @@ class PageDESFunction(tk.Frame):
             encryptedDataFile.close()
             pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESF
             if os.path.isfile(pathEncryptedFile):
-                encryptionTime = time.time() - encryptionStartTime
+                encryptionTime = round((time.time() - encryptionStartTime)*1000, 2)
                 showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
                 ENCRYPTION_TIME_LIST[2] = encryptionTime
                 INPUT_LEN_LIST[2] = msgSize
@@ -520,7 +522,7 @@ class PageDESFunction(tk.Frame):
             decryptedDataFile.close()
             pathDecryptedFile = os.getcwd()+'/'+self.DECRYPTED_TEXT_FILE_DESF
             if os.path.isfile(pathDecryptedFile):
-                decryptionTime = time.time() - decryptionStartTime
+                decryptionTime = round((time.time() - decryptionStartTime)*1000, 2)
                 showinfo(title='Decryption successful!', message='Decryption Time : '+str(decryptionTime))
                 DECRYPTION_TIME_LIST[2] = decryptionTime
             else:
@@ -621,7 +623,7 @@ class PageDESLib(tk.Frame): #-------- DES CFB mode.
             encryptedDataFile.close()
             pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESL
             if os.path.isfile(pathEncryptedFile):
-                encryptionTime = time.time() - encryptionStartTime
+                encryptionTime = round((time.time() - encryptionStartTime)*1000, 2)
                 showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
                 ENCRYPTION_TIME_LIST[3] = encryptionTime
                 INPUT_LEN_LIST[3] = msgSize
@@ -653,18 +655,11 @@ class PageDESLib(tk.Frame): #-------- DES CFB mode.
             decryptedDataFile.close()
             pathDecryptedFile = os.getcwd()+'/'+self.DECRYPTED_TEXT_FILE_DESL
             if os.path.isfile(pathDecryptedFile):
-                decryptionTime = time.time() - decryptionStartTime
+                decryptionTime = round((time.time() - decryptionStartTime)*1000, 2)
                 showinfo(title='Decryption successful!', message='Decryption Time : '+str(decryptionTime))
                 DECRYPTION_TIME_LIST[2] = decryptionTime
             else:
                 showerror(title='ERROR', message='Some ERROR occured!')
-
-
-
-###################################################################################################################################################
-
-
-
 
 
 #---------------   DES Lib Class : Main function
