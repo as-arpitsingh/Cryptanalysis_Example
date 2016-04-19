@@ -32,6 +32,10 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import *
 
+import rsa as RSAL
+from rsa import key  as RSALkey
+from rsa import common as RSALcommon
+
 from Crypto.PublicKey import RSA
 from Crypto import Random
 from Crypto.Cipher import DES3
@@ -266,18 +270,69 @@ class PageRSAFunction(tk.Frame):
 
 
 class PageRSALib(tk.Frame):
+        PLAIN_TEXT_FILE_RSAL = PLAIN_TEXT_FILE
+        ENCRYPTED_TEXT_FILE_RSAL = 'RSAL_'+ENCRYPTED_TEXT_FILE
+        DECRYPTED_TEXT_FILE_RSAL = 'RSAL_'+DECRYPTED_TEXT_FILE
+        RSALKEY = ''
+        PUBLIC_KEY_FILE_RSAL = 'RSAL_pubkey.pem'
+        PRIVATE_KEY_FILE_RSAL = 'RSAL_privkey.pem'
+        ENCRYPTED_DATA = ''
 
         #---------------   Function to generate keys unsing RSA Lib.
-        def runRSAKeyLib(self):
-            pass
+        def initializeRSAKeyLib(self):
+            random_generator = Random.new().read
+            key = RSA.generate(1024, random_generator)
+            self.RSALKEY = key
+            # write keys to files
+            fo_pub = open(self.PUBLIC_KEY_FILE_RSAL, 'w')
+            fo_pub.write((key.publickey().exportKey('PEM')).decode('utf-8'))
+            fo_pub.close()
+            fo_priv = open(self.PRIVATE_KEY_FILE_RSAL, 'w')
+            fo_priv.write((key.exportKey('PEM')).decode('utf-8'))
+            fo_priv.close()
+
 
         #---------------   Function to encrypt unsing RSA Lib.
         def runRSAEncryptionLib(self):
-            pass
+            #RSA.importKey(externKey, passphrase=None)
+            fo_pub = open(self.PUBLIC_KEY_FILE_RSAL,'r')
+            key = RSA.importKey(fo_pub.read())
+            key = self.RSALKEY
+            fo_pub.close()
+            print ('RSLA_Key', self.RSALKEY)
+            
+            dataToEncryptFile = open(self.PLAIN_TEXT_FILE_RSAL, 'r')
+            dataToEncrypt = dataToEncryptFile.read()
+            dataToEncryptBytes = dataToEncrypt.encode('utf-8')
+            dataToEncryptFile.close()
+            pdb.set_trace()
+            public_key = key.publickey()
+            print (public_key)
+            print ('dataToEncryptBytes: ', dataToEncryptBytes)
+            encryptedData = public_key.encrypt(dataToEncryptBytes, 32)
+            print (encryptedData)
+            self.ENCRYPTED_DATA = encryptedData
+
+            encryptedDataFile = open(self.ENCRYPTED_TEXT_FILE_RSAL, 'w')
+            encryptedDataFile.write(str(list(encryptedData)))
+            encryptedDataFile.close()
 
         #---------------   Function to decrypt unsing RSA Lib.
         def runRSADecryptionLib(self):
-            pass
+            fo_pub = open(self.PUBLIC_KEY_FILE_RSAL,'r')
+            key = RSA.importKey(fo_pub.read())
+            fo_pub.close()
+            private_key = self.RSALKEY
+            
+            encryptedDataFile = open(self.ENCRYPTED_TEXT_FILE_RSAL, 'r')
+            encryptedData = tuple(encryptedDataFile.read())
+            encryptedDataFile.close()
+            encryptedData = self.ENCRYPTED_DATA
+            print (encryptedData)
+
+            decryptedData = private_key.decrypt(encryptedData)
+            print (decryptedData)
+        # write decrypted data to file
 
 
 
@@ -292,7 +347,7 @@ class PageRSALib(tk.Frame):
             button2.pack(side=PACK_SIDE)
             button2.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
-            button4 = ttk.Button(self, text="Make RSA Lib. Keys", command=self.runRSAKeyLib)
+            button4 = ttk.Button(self, text="Make RSA Lib. Keys", command=self.initializeRSAKeyLib)
             button4.pack(side=PACK_SIDE)
             button4.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
         
