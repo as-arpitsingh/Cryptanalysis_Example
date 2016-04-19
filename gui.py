@@ -45,14 +45,7 @@ PLAIN_TEXT_FILE = 'plainText.txt'
 ENCRYPTED_TEXT_FILE = 'encrypted_file.txt'
 DECRYPTED_TEXT_FILE = 'decrypted_file.txt'
 
-# X-axis labels of the Performance Graph:
-# 1 --> RSA Function
-# 2 --> RSA Lib.
-# 3 --> DES Function
-# 3 --> DES Lib.
-
 LABEL_LIST = [1, 2, 3, 4]
-#LABEL_LIST = ['RSAF', 'RSAL', 'DESF', 'DESL']
 ENCRYPTION_TIME_LIST = [0,0,0,0]
 DECRYPTION_TIME_LIST = [0,0,0,0]
 INPUT_LEN_LIST = [0,0,0,0]
@@ -69,14 +62,7 @@ b = a.twinx()
 
 #---------------   Animation function
 def animate(i):
-    pullData = open("performanceAnalysis.text","r").read()
-    dataList = pullData.split('\n')
-    labelList = []
-    encryptionList = []
-    decryptionList = []
-    inputLengthList = []
-
-    xTicksLabelList = ['RSAF', 'RSAL', 'DESF', 'DESL']
+    xTicksLabelList = ['RSA Function', 'RSA Lib.', 'DES Function', 'DES Lib.']
     labelList = LABEL_LIST
     encryptionList = ENCRYPTION_TIME_LIST
     decryptionList = DECRYPTION_TIME_LIST
@@ -88,7 +74,7 @@ def animate(i):
     width = 0.2
     barEn = a.bar(ind, encryptionList, width, color='b')
     barDe = a.bar(ind+width, decryptionList, width, color='g')
-    b.plot(ind+width, inputLengthList, linewidth=2.0, color='r')
+    b.plot(ind+width, inputLengthList, linewidth=1.0, color='r')
     a.set_title('Performance Analysis by Encryption Algorithm')
     a.set_xticks(ind + width)
     a.set_xticklabels(xTicksLabelList)
@@ -105,13 +91,8 @@ def animate(i):
 class Cryptanalysis(tk.Tk):
 
     def __init__(self, *args, **kwargs):
-        
         tk.Tk.__init__(self, *args, **kwargs)
-
-        #tk.Tk.iconbitmap(self, default="clienticon.ico")
         tk.Tk.wm_title(self, PROJECT_NAME)
-        
-        
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand = True)
         container.grid_rowconfigure(0, weight=1)
