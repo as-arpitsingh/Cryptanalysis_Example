@@ -89,14 +89,16 @@ def animate(i):
     width = 0.2
     barEn = a.bar(ind, encryptionList, width, color='b')
     barDe = a.bar(ind+width, decryptionList, width, color='g')
+    barLen = b.bar(ind+(2*width), inputLengthList, width, color='r')
+
     a.set_title('Performance Analysis by Encryption Algorithm')
     a.set_xticks(ind + width)
     a.set_xticklabels(xTicksLabelList)
-    a.legend((barEn[0], barDe[0]), ('Ecryption', 'Decryption'))
+    a.legend((barEn[0], barDe[0], barLen[0]), ('Ecryption', 'Decryption', 'Input Length'))
     a.set_xlabel('Encryption Algorithm')
     a.set_ylabel('Encryption / Decryption Time (milliseconds)', color='b')
     b.set_ylabel('Input Size (in char len)', color='r')
-    b.plot(ind+width, inputLengthList, linewidth=1.0, color='r')
+
 
 
 ################################################################################
@@ -274,7 +276,7 @@ class PageRSAFunction(tk.Frame):
 
 
 class PageRSALib(tk.Frame):
-        PLAIN_TEXT_FILE_RSAL = 'RSAL_'+PLAIN_TEXT_FILE
+        PLAIN_TEXT_FILE_RSAL = PLAIN_TEXT_FILE
         ENCRYPTED_TEXT_FILE_RSAL = 'RSAL_'+ENCRYPTED_TEXT_FILE
         DECRYPTED_TEXT_FILE_RSAL = 'RSAL_'+DECRYPTED_TEXT_FILE
         RSALKEY = ''
