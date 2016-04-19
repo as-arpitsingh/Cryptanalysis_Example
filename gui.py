@@ -8,26 +8,34 @@
 #-------- get Bytes --> 'Sting'.encode('UTF-8')
 #-------- get String --> 'Bytes'.decode('UTF-8')
 
-import matplotlib, os, re, time, pdb
+import os, re, time, pdb # python standard modules/lbraries
+import makeRsaKeys, rsaCipher, pyDes # implemented Functions
+
+# ------- these modules / libraries must be installed before importing.
+# ------- please refer the ReadMe.txt file.
+import numpy as np
+
+import matplotlib
+import matplotlib.animation as animation
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
-import matplotlib.animation as animation
 from matplotlib import style
+from matplotlib import pyplot as plt
+
 import tkinter as tk
 from tkinter import ttk
-import numpy as np
-from matplotlib import pyplot as plt
-import makeRsaKeys, rsaCipher, pyDes
 from tkinter.messagebox import *
 
+from Crypto.PublicKey import RSA
+from Crypto import Random
+from Crypto.Cipher import DES3
 
 ################################################################################
 #---------------   initializing global variables
 ################################################################################
 
 CURRENT_DIRECTORY = os.getcwd()
-print (CURRENT_DIRECTORY)
 INTRO_TEXT = 'Welcome!'
 PROJECT_NAME = 'Cryptanalysis'
 LARGE_FONT = ("Helvetica", 16)
@@ -49,8 +57,6 @@ LABEL_LIST = [1, 2, 3, 4]
 ENCRYPTION_TIME_LIST = [0,0,0,0]
 DECRYPTION_TIME_LIST = [0,0,0,0]
 INPUT_LEN_LIST = [0,0,0,0]
-
-
 
 f = Figure()
 a = f.add_subplot(111)
@@ -189,8 +195,6 @@ class PageRSAFunction(tk.Frame):
         pathRSAPubKey = os.getcwd()+'/'+self.PUBLIC_KEY_FILE_RSAF
         pathRSAPrivKey = os.getcwd()+'/'+self.PRIVATE_KEY_FILE_RSAF
         if os.path.isfile(pathRSAPubKey) or os.path.isfile(pathRSAPrivKey):
-            print ('Keys already exist!')
-            #askokcancel("Warning", "This will delete stuff")
             showerror(title='ERROR', message='Keys already exist!')
         else:
             makeRsaKeys.main()
@@ -213,7 +217,6 @@ class PageRSAFunction(tk.Frame):
                 showinfo(title='Encryption successful!', message='Input Message Size : '+str(msgSize)+'\nEncryption Time : '+str(encryptionTime))
                 ENCRYPTION_TIME_LIST[0] = encryptionTime
                 INPUT_LEN_LIST[0] = msgSize
-                print ('encryption time: '+str(encryptionTime))
 
     #---------------   Function to call rsaCipher.py Decryption function
     def runRSADecryptionFunction(self):
@@ -326,7 +329,6 @@ class PageDESFunction(tk.Frame):
             self.keyDesBytes = self.keyDes.encode('UTF-8')
             self.keyDesString = self.keyDesBytes.decode('UTF-8')
             self.DES_KEY = self.keyDesBytes
-            print (self.DES_KEY)
             showinfo(title='Key Validated Sucessfully!', message='The value entered for the key has been accepted!')
             showwarning(title='Remember your Key!', message='Please make sure to remember or securely store your key, since it will be cleared from the entry box once you click "OK"!\nEntered Key : "%s"'% self.keyDes)
             self.entry1.delete(0,len(self.keyDes))
@@ -336,12 +338,10 @@ class PageDESFunction(tk.Frame):
 #---------------   Function to call pyDes.des(b'key', pyDes.CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=pyDes.PAD_PKCS5) to initialize class
     def instantiateClasspyDes(self):
             if self.DES_KEY == '':
-                print ('No Key!')
                 showerror(title='ERROR', message='No Key! Please enter the DES Key first.')
             else:
                 self.DES_INSTANCE = pyDes.des(self.DES_KEY, pyDes.CBC, b"\0\0\0\0\0\0\0\0", pad=None, padmode=pyDes.PAD_PKCS5)
                 self.DES_INSTANCE_FLAG = True
-            print (self.DES_KEY, self.DES_INSTANCE_FLAG, 'desInstance:', self.DES_INSTANCE)
 
 
 #---------------   Function to Encrypt using DES Function Class
@@ -350,7 +350,6 @@ class PageDESFunction(tk.Frame):
         if self.DES_INSTANCE_FLAG == False:
             self.instantiateClasspyDes()
         if self.DES_KEY == '':
-            print ('No Key!')
             showerror(title='ERROR', message='No Key! Please enter the DES Key first.')
         pathPlaintTextFile = os.getcwd()+'/'+self.PLAIN_TEXT_FILE_DESF
         pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESF
@@ -358,9 +357,7 @@ class PageDESFunction(tk.Frame):
             showerror(title='ERROR', message='Plain Text file is missing!')
         elif os.path.isfile(pathEncryptedFile):
             showerror(title='ERROR', message='Encrypted file already exists!')
-        else: #get size and time
-            print ('its encryption time')
-            #get size and time
+        else:
             dataToEncryptFile = open(CURRENT_DIRECTORY+'/'+self.PLAIN_TEXT_FILE_DESF, 'r')
             dataToEncrypt = dataToEncryptFile.read()
             dataToEncryptFile.close()
@@ -386,7 +383,6 @@ class PageDESFunction(tk.Frame):
         if self.DES_INSTANCE_FLAG == False:
             self.instantiateClasspyDes()
         if self.DES_KEY == '':
-            print ('No Key!')
             showerror(title='ERROR', message='No Key! Please enter the DES Key first.')
         pathEncryptedFile = os.getcwd()+'/'+self.ENCRYPTED_TEXT_FILE_DESF
         pathDecryptedFile = os.getcwd()+'/'+self.DECRYPTED_TEXT_FILE_DESF
@@ -394,9 +390,7 @@ class PageDESFunction(tk.Frame):
             showerror(title='ERROR', message='No Encrypted file found to Decrypt!')
         elif os.path.isfile(pathDecryptedFile):
             showerror(title='ERROR', message='Decrypted file already exists!')
-        else: #get size and time
-            print ('Lets decrypt now')
-            #get size and time
+        else:
             dataToDecryptFile = open(CURRENT_DIRECTORY+'/'+self.ENCRYPTED_TEXT_FILE_DESF, 'rb')
             dataToDecrypt = dataToDecryptFile.read()
             dataToDecryptFile.close()
