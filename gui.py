@@ -1,7 +1,12 @@
-# The code for changing pages was derived from: http://stackoverflow.com/questions/7546050/switch-between-two-frames-in-tkinter
+################################################################################
+#
+# References:
+# The code for changing pages was derived from:
+# http://stackoverflow.com/questions/7546050/switch-between-two-frames-in-tkinter
 # License: http://creativecommons.org/licenses/by-sa/3.0/
-# Referenced from: https://pythonprogramming.net/tkinter-depth-tutorial-making-actual-program/	
-
+# Referenced from:
+# https://pythonprogramming.net/tkinter-depth-tutorial-making-actual-program/
+#
 ################################################################################
 #---------------   importing dependencies
 ################################################################################
@@ -129,9 +134,9 @@ class PageMainMenu(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
-        label1 = tk.Label(self, text=INTRO_TEXT, font=LARGE_FONT)
-        label1.pack(pady=10,padx=10, side=PACK_SIDE)
-        label1.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        labelTitle = tk.Label(self, text=INTRO_TEXT, font=LARGE_FONT)
+        labelTitle.pack(pady=10,padx=10, side=PACK_SIDE)
+        labelTitle.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
         
         label2 = tk.Label(self, text="Main Menu", font=LARGE_FONT)
         label2.pack(pady=10,padx=10, side=PACK_SIDE)
@@ -139,19 +144,19 @@ class PageMainMenu(tk.Frame):
         
         button1 = ttk.Button(self, text="RSA", command=lambda: controller.show_frame(PageRSA))
         button1.pack(side=PACK_SIDE)
-        button1.place(relx=0.5, rely=3*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        button1.place(relx=0.5, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
         button2 = ttk.Button(self, text="DES", command=lambda: controller.show_frame(PageDES))
         button2.pack(side=PACK_SIDE)
-        button2.place(relx=0.5, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        button2.place(relx=0.5, rely=8*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
         paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
         paButton.pack(side=PACK_SIDE)
-        paButton.place(relx=0.5, rely=5*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        paButton.place(relx=0.5, rely=10*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
         quitButton = ttk.Button(self, text="Quit", command=quit)
         quitButton.pack(side=PACK_SIDE)
-        quitButton.place(relx=0.5, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        quitButton.place(relx=0.5, rely=15*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
 ################################################################################
 #---------------   RSA Page
@@ -161,9 +166,9 @@ class PageRSA(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label1 = tk.Label(self, text="RSA", font=LARGE_FONT)
-        label1.pack(pady=10,padx=10, side=PACK_SIDE)
-        label1.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        labelTitle = tk.Label(self, text="RSA", font=LARGE_FONT)
+        labelTitle.pack(pady=10,padx=10, side=PACK_SIDE)
+        labelTitle.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
         button1 = ttk.Button(self, text="Main Menu", command=lambda: controller.show_frame(PageMainMenu))
         button1.pack(side=PACK_SIDE)
@@ -171,15 +176,15 @@ class PageRSA(tk.Frame):
 
         button2 = ttk.Button(self, text="RSA Function", command=lambda: controller.show_frame(PageRSAFunction))
         button2.pack(side=PACK_SIDE)
-        button2.place(relx=0.5, rely=3*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
-        
+        button2.place(relx=0.5, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
         button3 = ttk.Button(self, text="RSA Lib.", command=lambda: controller.show_frame(PageRSALib))
         button3.pack(side=PACK_SIDE)
-        button3.place(relx=0.5, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        button3.place(relx=0.5, rely=8*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
         paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
         paButton.pack(side=PACK_SIDE)
-        paButton.place(relx=0.5, rely=5*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        paButton.place(relx=0.5, rely=15*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
 
 
@@ -235,55 +240,73 @@ class PageRSAFunction(tk.Frame):
 #---------------   RSA Function Class : Main function
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label1 = tk.Label(self, text="RSA Function", font=LARGE_FONT)
-        label1.pack(pady=10,padx=10, side=PACK_SIDE)
-        label1.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
-
-        button1 = ttk.Button(self, text="Main Menu", command=lambda: controller.show_frame(PageMainMenu))
-        button1.pack(side=PACK_SIDE)
-        button1.place(relx=2*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        labelTitle = tk.Label(self, text="RSA Function", font=LARGE_FONT)
+        labelTitle.pack(pady=10,padx=10, side=PACK_SIDE)
+        labelTitle.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
         button2 = ttk.Button(self, text="RSA", command=lambda: controller.show_frame(PageRSA))
         button2.pack(side=PACK_SIDE)
-        button2.place(relx=4*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
-
-        paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
-        paButton.pack(side=PACK_SIDE)
-        paButton.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        button2.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
         button4 = ttk.Button(self, text="Make RSA Keys", command=self.runRSAKeyFunction)
         button4.pack(side=PACK_SIDE)
-        button4.place(relx=2*PLACE_HORIZONTAL_SPACING, rely=3*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        button4.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
         
         button5 = ttk.Button(self, text="RSA Function Encryption", command=self.runRSAEncryptionFunction)
         button5.pack(side=PACK_SIDE)
-        button5.place(relx=4*PLACE_HORIZONTAL_SPACING, rely=3*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        button5.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=8*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
         
         button6 = ttk.Button(self, text="RSA Function Decryption", command=self.runRSADecryptionFunction)
         button6.pack(side=PACK_SIDE)
-        button6.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=3*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        button6.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=10*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
+        paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
+        paButton.pack(side=PACK_SIDE)
+        paButton.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=15*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
 
 class PageRSALib(tk.Frame):
 
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        label1 = tk.Label(self, text="RSA Lib.", font=LARGE_FONT)
-        label1.pack(pady=10,padx=10, side=PACK_SIDE)
-        label1.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        #---------------   Function to generate keys unsing RSA Lib.
+        def runRSAKeyLib(self):
+            pass
 
-        button1 = ttk.Button(self, text="Main Menu", command=lambda: controller.show_frame(PageMainMenu))
-        button1.pack(side=PACK_SIDE)
-        button1.place(relx=2*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        #---------------   Function to encrypt unsing RSA Lib.
+        def runRSAEncryptionLib(self):
+            pass
 
-        button2 = ttk.Button(self, text="RSA", command=lambda: controller.show_frame(PageRSA))
-        button2.pack(side=PACK_SIDE)
-        button2.place(relx=4*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        #---------------   Function to decrypt unsing RSA Lib.
+        def runRSADecryptionLib(self):
+            pass
 
-        paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
-        paButton.pack(side=PACK_SIDE)
-        paButton.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+
+#---------------   RSA Lib Class : Main function
+        def __init__(self, parent, controller):
+            tk.Frame.__init__(self, parent)
+            labelTitle = tk.Label(self, text="RSA Lib.", font=LARGE_FONT)
+            labelTitle.pack(pady=10,padx=10, side=PACK_SIDE)
+            labelTitle.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+            
+            button2 = ttk.Button(self, text="RSA", command=lambda: controller.show_frame(PageRSA))
+            button2.pack(side=PACK_SIDE)
+            button2.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+            button4 = ttk.Button(self, text="Make RSA Lib. Keys", command=self.runRSAKeyLib)
+            button4.pack(side=PACK_SIDE)
+            button4.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        
+            button5 = ttk.Button(self, text="RSA Lib. Encryption", command=self.runRSAEncryptionLib)
+            button5.pack(side=PACK_SIDE)
+            button5.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=8*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+            
+            button6 = ttk.Button(self, text="RSA Lib. Decryption", command=self.runRSADecryptionLib)
+            button6.pack(side=PACK_SIDE)
+            button6.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=10*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+            paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
+            paButton.pack(side=PACK_SIDE)
+            paButton.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=15*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
 
 
@@ -293,9 +316,9 @@ class PageRSALib(tk.Frame):
 class PageDES(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label1 = tk.Label(self, text="DES", font=LARGE_FONT)
-        label1.pack(pady=10,padx=10, side=PACK_SIDE)
-        label1.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        labelTitle = tk.Label(self, text="DES", font=LARGE_FONT)
+        labelTitle.pack(pady=10,padx=10, side=PACK_SIDE)
+        labelTitle.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
         button1 = ttk.Button(self, text="Main Menu", command=lambda: controller.show_frame(PageMainMenu))
         button1.pack(side=PACK_SIDE)
@@ -303,15 +326,15 @@ class PageDES(tk.Frame):
 
         button2 = ttk.Button(self, text="DES Function", command=lambda: controller.show_frame(PageDESFunction))
         button2.pack(side=PACK_SIDE)
-        button2.place(relx=0.5, rely=3*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        button2.place(relx=0.5, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
         button3 = ttk.Button(self, text="DES Lib.", command=lambda: controller.show_frame(PageDESLib))
         button3.pack(side=PACK_SIDE)
-        button3.place(relx=0.5, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
-        
+        button3.place(relx=0.5, rely=8*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
         paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
         paButton.pack(side=PACK_SIDE)
-        paButton.place(relx=0.5, rely=5*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        paButton.place(relx=0.5, rely=15*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
 
 class PageDESFunction(tk.Frame):
@@ -413,46 +436,37 @@ class PageDESFunction(tk.Frame):
 #---------------   DES Function Class : Main function
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label1 = tk.Label(self, text="DES Function", font=LARGE_FONT)
-        label1.pack(pady=10,padx=10, side=PACK_SIDE)
-        label1.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        labelTitle = tk.Label(self, text="DES Function", font=LARGE_FONT)
+        labelTitle.pack(pady=10,padx=10, side=PACK_SIDE)
+        labelTitle.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
+        buttonDESHome = ttk.Button(self, text="DES", command=lambda: controller.show_frame(PageDES))
+        buttonDESHome.pack(side=PACK_SIDE)
+        buttonDESHome.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
-        button1 = ttk.Button(self, text="Main Menu", command=lambda: controller.show_frame(PageMainMenu))
-        button1.pack(side=PACK_SIDE)
-        button1.place(relx=2*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
-
-        button2 = ttk.Button(self, text="DES", command=lambda: controller.show_frame(PageDES))
-        button2.pack(side=PACK_SIDE)
-        button2.place(relx=4*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
-
-        paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
-        paButton.pack(side=PACK_SIDE)
-        paButton.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
-
-
-        label2 = ttk.Label(self, text="Enter DES Key", font=LARGE_FONT)
-        label2.pack(pady=10,padx=10, side=PACK_SIDE)
-        label2.place(relx=2*PLACE_HORIZONTAL_SPACING, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        labelKey = ttk.Label(self, text="Enter DES Key", font=LARGE_FONT)
+        labelKey.pack(pady=10,padx=10, side=PACK_SIDE)
+        labelKey.place(relx=4*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
         self.entry1 = tk.Entry(self, width=8)
         self.entry1.pack(pady=10,padx=10, side=PACK_SIDE)
-        self.entry1.place(relx=4*PLACE_HORIZONTAL_SPACING, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        self.entry1.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
         
         self.button3 = ttk.Button(self, text="Submit", command=self.getDesKey)
         self.button3.pack(side=PACK_SIDE)
-        self.button3.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=4*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        self.button3.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
+        buttonEnFunc = ttk.Button(self, text="DES Function Encryption", command=self.runDESFunctionEncryption)
+        buttonEnFunc.pack(side=PACK_SIDE)
+        buttonEnFunc.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=8*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
-        button2 = ttk.Button(self, text="DES Function Encryption", command=self.runDESFunctionEncryption)
-        button2.pack(side=PACK_SIDE)
-        button2.place(relx=2*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        buttonDeFunc = ttk.Button(self, text="DES Function Encryption", command=self.runDESFunctionDecryption)
+        buttonDeFunc.pack(side=PACK_SIDE)
+        buttonDeFunc.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=10*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
-        paButton = ttk.Button(self, text="DES Function Encryption", command=self.runDESFunctionDecryption)
+        paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
         paButton.pack(side=PACK_SIDE)
-        paButton.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=6*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
-
-
+        paButton.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=15*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
 
 
@@ -461,21 +475,22 @@ class PageDESLib(tk.Frame):
     
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label1 = tk.Label(self, text="DES Lib.", font=LARGE_FONT)
-        label1.pack(pady=10,padx=10, side=PACK_SIDE)
-        label1.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
-        
-        button1 = ttk.Button(self, text="Main Menu", command=lambda: controller.show_frame(PageMainMenu))
-        button1.pack(side=PACK_SIDE)
-        button1.place(relx=2*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        labelTitle = tk.Label(self, text="DES Lib.", font=LARGE_FONT)
+        labelTitle.pack(pady=10,padx=10, side=PACK_SIDE)
+        labelTitle.place(relx=0.5, rely=1*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
-        button2 = ttk.Button(self, text="DES", command=lambda: controller.show_frame(PageDES))
-        button2.pack(side=PACK_SIDE)
-        button2.place(relx=4*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        buttonDESHome = ttk.Button(self, text="DES", command=lambda: controller.show_frame(PageDES))
+        buttonDESHome.pack(side=PACK_SIDE)
+        buttonDESHome.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+
+
+
+
+
 
         paButton = ttk.Button(self, text="Performance Analysis", command=lambda: controller.show_frame(PagePerformanceAnalysis))
         paButton.pack(side=PACK_SIDE)
-        paButton.place(relx=6*PLACE_HORIZONTAL_SPACING, rely=2*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
+        paButton.place(relx=5*PLACE_HORIZONTAL_SPACING, rely=15*PLACE_VERTICAL_SPACING, anchor=PLACE_ANCHOR)
 
 
 
@@ -488,11 +503,11 @@ class PagePerformanceAnalysis(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Performance Analysis", font=LARGE_FONT)
-        label.pack(pady=10,padx=10, side=PACK_SIDE)
+        labelTitle = tk.Label(self, text="Performance Analysis", font=LARGE_FONT)
+        labelTitle.pack(pady=10,padx=10, side=PACK_SIDE)
 
-        button1 = ttk.Button(self, text="Main Menu", command=lambda: controller.show_frame(PageMainMenu))
-        button1.pack(side=PACK_SIDE)
+        buttonMainMenu = ttk.Button(self, text="Main Menu", command=lambda: controller.show_frame(PageMainMenu))
+        buttonMainMenu.pack(side=PACK_SIDE)
 
         canvas = FigureCanvasTkAgg(f, self)
         canvas.show()
