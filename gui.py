@@ -10,6 +10,7 @@
 ################################################################################
 #---------------   importing dependencies
 ################################################################################
+
 #-------- get Bytes --> 'Sting'.encode('UTF-8')
 #-------- get String --> 'Bytes'.decode('UTF-8')
 
@@ -717,7 +718,7 @@ class PageDESLib(tk.Frame): #-------- DES CFB mode.
             if os.path.isfile(pathDecryptedFile):
                 decryptionTime = round((time.time() - decryptionStartTime)*1000, 2)
                 showinfo(title='Decryption successful!', message='Decryption Time : '+str(decryptionTime))
-                DECRYPTION_TIME_LIST[2] = decryptionTime
+                DECRYPTION_TIME_LIST[3] = decryptionTime
             else:
                 showerror(title='ERROR', message='Some ERROR occured!')
 
